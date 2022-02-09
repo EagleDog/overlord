@@ -1,7 +1,8 @@
 require 'gosu'
-require 'wads'
+require_relative 'lib/wads'
+require_relative 'lib/rdia-games'
+#require 'wads'
 #require 'rdia-games'
-require_relative '../lib/rdia-games'
 
 include Wads
 include RdiaGames
@@ -11,7 +12,7 @@ GAME_HEIGHT = 720
 
 
 class TileEditor < RdiaGame
-    def initialize(board_file = "./data/editor_board.txt")
+    def initialize(board_file = "maps/editor_board.txt")
         super(GAME_WIDTH, GAME_HEIGHT, "TileEditor", TileEditorDisplay.new(board_file))
         register_hold_down_key(Gosu::KbA)    # Move left
         register_hold_down_key(Gosu::KbD)    # Move right
