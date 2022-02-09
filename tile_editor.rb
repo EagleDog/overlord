@@ -239,7 +239,7 @@ class TileEditorDisplay < Widget
 
     def save_board 
         puts "Going to save board"
-        open("./data/editor_new_board.txt", 'w') { |f|
+        open("maps/dump/editor_new_board.txt", 'w') { |f|
             (0..@grid.grid_height-1).each do |y|
                 str = ""
                 (0..@grid.grid_width-1).each do |x|
