@@ -1,5 +1,6 @@
 require_relative 'scroller'
 require_relative 'objects'
+require_relative 'bin/pathfinder.rb'
 
 class Overlord < RdiaGame
 	def initialize
@@ -9,9 +10,7 @@ class Overlord < RdiaGame
 		register_hold_down_key(Gosu::KbD)    # Move right
 		register_hold_down_key(Gosu::KbW)    # Move left
 		register_hold_down_key(Gosu::KbS)    # Move left
-
         setup
-
 	end 
 
 	def setup

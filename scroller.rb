@@ -231,13 +231,15 @@ class ScrollerDisplay < Widget
             index = 0
             while index < line.size
                 char = line[index..index+1].strip
-#####                puts "[#{index}  #{grid_x},#{grid_y} = #{char}."
+
+#####           puts "[#{index}  #{grid_x},#{grid_y} = #{char}."
                 img = nil
 
                 # If the token is a number, use it as the tile index
                 if char.match?(/[[:digit:]]/)
                     tile_index = char.to_i
-                    puts "Using index #{tile_index}."
+
+#####               puts "Using index #{tile_index}."
                     img = BackgroundArea.new(@tileset[tile_index])
                 #elsif char == "B"
                 #    img = Brick.new(@blue_brick)
