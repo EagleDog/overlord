@@ -1,4 +1,4 @@
-# path_finder.rb
+# pathfinder.rb
 #
 #
 
