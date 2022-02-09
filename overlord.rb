@@ -10,12 +10,14 @@ class Overlord < RdiaGame
 		register_hold_down_key(Gosu::KbW)    # Move left
 		register_hold_down_key(Gosu::KbS)    # Move left
 
+        setup
+
 	end 
 
 	def setup
 		@balljack = Ballrag.new
 		@balljack.set_absolute_position(300, 100)
-		@scroller.add_child(@balljack)
+#		@scroller.add_child(@balljack)
 	end
 end
 
