@@ -7,7 +7,6 @@ class Overlord < Scroller3
 	def initialize
 #		@scroller = ScrollerDisplay.new
 		super #(GAME_WIDTH, GAME_HEIGHT, "Test Scroller", @scroller) # ScrollerDisplay.new)
-#        keybindings
         setup
 	end 
 
@@ -18,18 +17,6 @@ class Overlord < Scroller3
 		@balljack.set_absolute_position(300, 100)
 #		@scroller.add_child(@balljack)
 	end
-
-    # def keybindings
-    #     register_hold_down_key(Gosu::KbA)    # Move left
-    #     register_hold_down_key(Gosu::KbD)    # Move right
-    #     register_hold_down_key(Gosu::KbW)    # Move left
-    #     register_hold_down_key(Gosu::KbS)    # Move left
-
-    #     register_hold_down_key(Gosu::KbLeft)    # Move left
-    #     register_hold_down_key(Gosu::KbRight)    # Move right
-    #     register_hold_down_key(Gosu::KbUp)    # Move left
-    #     register_hold_down_key(Gosu::KbDown)    # Move left   
-    # end
 
 end
 

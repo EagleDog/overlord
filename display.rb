@@ -48,7 +48,7 @@ class ScrollerDisplay < Widget
         add_child(@player)
 
         @grid = GridDisplay.new(0, 0, 16, 50, 38, {ARG_SCALE => 2})
-        instantiate_elements(File.readlines("data/alphaboard1.txt"))
+        instantiate_elements(File.readlines("boards/aboard1.txt"))
         add_child(@grid)
     end 
 
