@@ -2,7 +2,7 @@
 #
 #
 
-class Balrog < GameObject
+class Ballrag < GameObject
     def initialize
         def initialize(x, y)
             super(COLOR_WHITE)

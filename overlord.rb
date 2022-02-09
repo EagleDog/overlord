@@ -13,9 +13,9 @@ class Overlord < RdiaGame
 	end 
 
 	def setup
-		@balzack = Balrog.new
-		@bakzack.set_absolute_position(300, 100)
-		@scroller.add_child(@balzack)
+		@balljack = Ballrag.new
+		@balljack.set_absolute_position(300, 100)
+		@scroller.add_child(@balljack)
 	end
 end
 
