@@ -1,23 +1,36 @@
-require_relative 'scroller'
+require_relative 'scroller3'
+require_relative 'bin/pathfinder'
 require_relative 'objects'
-require_relative 'bin/pathfinder.rb'
 
-class Overlord < RdiaGame
+
+class Overlord < Scroller3
 	def initialize
-		@scroller = ScrollerDisplay.new
-		super(GAME_WIDTH, GAME_HEIGHT, "Test Scroller", @scroller) # ScrollerDisplay.new)
-		register_hold_down_key(Gosu::KbA)    # Move left
-		register_hold_down_key(Gosu::KbD)    # Move right
-		register_hold_down_key(Gosu::KbW)    # Move left
-		register_hold_down_key(Gosu::KbS)    # Move left
+#		@scroller = ScrollerDisplay.new
+		super #(GAME_WIDTH, GAME_HEIGHT, "Test Scroller", @scroller) # ScrollerDisplay.new)
+#        keybindings
         setup
 	end 
 
 	def setup
+        @pathfinder = Pathfinder.new
+        @pathfinder.setup
 		@balljack = Ballrag.new
 		@balljack.set_absolute_position(300, 100)
 #		@scroller.add_child(@balljack)
 	end
+
+    # def keybindings
+    #     register_hold_down_key(Gosu::KbA)    # Move left
+    #     register_hold_down_key(Gosu::KbD)    # Move right
+    #     register_hold_down_key(Gosu::KbW)    # Move left
+    #     register_hold_down_key(Gosu::KbS)    # Move left
+
+    #     register_hold_down_key(Gosu::KbLeft)    # Move left
+    #     register_hold_down_key(Gosu::KbRight)    # Move right
+    #     register_hold_down_key(Gosu::KbUp)    # Move left
+    #     register_hold_down_key(Gosu::KbDown)    # Move left   
+    # end
+
 end
 
 Overlord.new.show

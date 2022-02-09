@@ -1,8 +1,7 @@
 require 'gosu'
-#require 'wads'
+require 'wads'
 #require 'rdia-games'
-require_relative 'lib/wads'
-require_relative 'lib/rdia-games'
+require_relative '../lib/rdia-games'
 
 include Wads
 include RdiaGames
@@ -17,7 +16,7 @@ DIRECTION_LEFT = 1
 DIRECTION_AWAY = 2
 DIRECTION_RIGHT = 3
 
-class ScrollerGame < RdiaGame
+class Scroller2 < RdiaGame
     def initialize
         super(GAME_WIDTH, GAME_HEIGHT, "Test Scroller", ScrollerDisplay.new)
         register_hold_down_key(Gosu::KbA)    # Move left
@@ -56,15 +55,16 @@ class ScrollerDisplay < Widget
         @level_text = east_panel.get_layout.add_text("#{@level}",
                                                      {ARG_TEXT_ALIGN => TEXT_ALIGN_RIGHT})
         
-        add_overlay(create_overlay_widget)
+        # TODO put this back when we are ready to release, instructions to the user
+        #add_overlay(create_overlay_widget)
 
-        @tileset = Gosu::Image.load_tiles("media/basictiles.png", 16, 16, tileable: true)
+        @tileset = Gosu::Image.load_tiles("../media/basictiles.png", 16, 16, tileable: true)
         @blue_brick = @tileset[1]   # the brick with an empty pixel on the left and right, so there is a gap
         @red_wall = @tileset[7]
         @yellow_dot = @tileset[18]
         @green_dot = @tileset[19]
         @fire_transition_tile = @tileset[66]
-        @diagonal_tileset = Gosu::Image.load_tiles("media/diagonaltiles.png", 16, 16, tileable: true)
+        @diagonal_tileset = Gosu::Image.load_tiles("../media/diagonaltiles.png", 16, 16, tileable: true)
         @red_wall_se = @diagonal_tileset[0]
         @red_wall_sw = @diagonal_tileset[7]
         @red_wall_nw = @diagonal_tileset[13]
@@ -75,19 +75,9 @@ class ScrollerDisplay < Widget
         add_child(@player)
 
         @grid = GridDisplay.new(0, 0, 16, 50, 38, {ARG_SCALE => 2})
-        instantiate_elements(File.readlines("./data/scroller_board.txt"))
+        instantiate_elements(File.readlines("../data/alphaboard1.txt"))
         add_child(@grid)
-
-#        setup
-
-    end
-
-    def setup
-        @ball = Ball.new(10, 10)
-        @ball.set_absolute_position(300, 100)
-        add_child(@ball)
-    end
-
+    end 
 
     def draw 
         if @show_border
@@ -178,13 +168,13 @@ class ScrollerDisplay < Widget
     end
 
     def handle_key_held_down id, mouse_x, mouse_y
-        if id == Gosu::KbA or id == Gosu::KbLeft
+        if id == Gosu::KbA
             @player.move_left(@grid)
-        elsif id == Gosu::KbD or id == Gosu::KbRight
+        elsif id == Gosu::KbD
             @player.move_right(@grid)
-        elsif id == Gosu::KbW or id == Gosu::KbUp
+        elsif id == Gosu::KbW
             @player.move_up(@grid)
-        elsif id == Gosu::KbS or id == Gosu::KbDown
+        elsif id == Gosu::KbS
             @player.move_down(@grid)
         end
         #puts "#{@player.x}, #{@player.y}    Camera: #{@camera_x}, #{@camera_y}   Tile: #{@grid.tile_at_absolute(@player.x, @player.y)}"
@@ -231,16 +221,19 @@ class ScrollerDisplay < Widget
             index = 0
             while index < line.size
                 char = line[index..index+1].strip
-
-#####           puts "[#{index}  #{grid_x},#{grid_y} = #{char}."
+                #puts "[#{index}  #{grid_x},#{grid_y} = #{char}."
                 img = nil
 
                 # If the token is a number, use it as the tile index
                 if char.match?(/[[:digit:]]/)
                     tile_index = char.to_i
-
-#####               puts "Using index #{tile_index}."
-                    img = BackgroundArea.new(@tileset[tile_index])
+                    #puts "Using index #{tile_index}."
+                    # This is temporary, we need a way to define and store metadata for tiles
+                    if tile_index == 5
+                        img = Wall.new(@tileset[tile_index])
+                    else
+                        img = BackgroundArea.new(@tileset[tile_index])
+                    end
                 #elsif char == "B"
                 #    img = Brick.new(@blue_brick)
                 elsif char == "W"
@@ -273,7 +266,7 @@ class Character < GameObject
     def initialize(args = {})
         @animation_count = 1
         @direction = DIRECTION_TOWARDS
-        @character_tileset = Gosu::Image.load_tiles("media/characters.png", 16, 16, tileable: true)
+        @character_tileset = Gosu::Image.load_tiles("../media/characters.png", 16, 16, tileable: true)
         @img_towards = [@character_tileset[3], @character_tileset[4], @character_tileset[5]]
         @img_left = [@character_tileset[15], @character_tileset[16], @character_tileset[17]]
         @img_right = [@character_tileset[27], @character_tileset[28], @character_tileset[29]]
@@ -359,7 +352,27 @@ class Character < GameObject
             if widgets_at_proposed_spot.empty?
                 set_absolute_position(proposed_next_x, proposed_next_y)
             else 
-                debug("Can't move any further because widget(s) are there #{widgets_at_proposed_spot}")
+                # determine what interactions occur with this object
+                # List of possible interactions
+                # RDIA_REACT_BOUNCE
+                # RDIA_REACT_ONE_WAY
+                # RDIA_REACT_BOUNCE_DIAGONAL
+                # RDIA_REACT_CONSUME
+                # RDIA_REACT_GOAL
+                # RDIA_REACT_STOP
+                # RDIA_REACT_SCORE
+                # RDIA_REACT_LOSE
+                stop_motion = false
+                widgets_at_proposed_spot.each do |waps|
+                    if waps.interaction_results.include? RDIA_REACT_STOP
+                        stop_motion = true 
+                    end 
+                end 
+                if !stop_motion
+                    set_absolute_position(proposed_next_x, proposed_next_y)
+                end
+                # 
+                #    info("Can't move any further because #{widgets_at_proposed_spot.size} widget(s) are there ")
             end
         end
     end
@@ -372,7 +385,7 @@ class Wall < GameObject
     end
 
     def interaction_results
-        [RDIA_REACT_BOUNCE]
+        [RDIA_REACT_STOP]
     end
 end
 
@@ -463,7 +476,7 @@ class BricksTheme < GuiTheme
     end
 
     def media_path(file)
-        File.join(File.dirname(File.dirname(__FILE__)), 'overlord/media', file)
+        File.join(File.dirname(File.dirname(__FILE__)), './media', file)
     end
 end
 
@@ -503,4 +516,4 @@ end
 WadsConfig.instance.set_current_theme(BricksTheme.new)
 
 
-# ScrollerGame.new.show
+# Scroller2.new.show
