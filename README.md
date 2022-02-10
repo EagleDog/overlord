@@ -18,7 +18,7 @@
  /   \
 /     o overlord   ---- [ Overlord < Scroller3 ]
 |     |   \
-|     |    o require 'scroller3', 'pathfinder', 'objects',
+|     |    o require 'scroller3', 'pathfinder', 'objects'
 |     /\
 |    /  o scroller3  ---- [ Scroller3 < RdiaGame,
 |   /    \    \             OverDisplay < ScrollerDisplay ]
@@ -43,7 +43,7 @@
 |\  o map_editor
 | \  
 |  \
-|   o rdia  require 'version', 'widgets', 'app'
+|   o rdia  require 'version' 'widgets' 'app'
 |   |\
 |   | o app ---- [ RdiaGame < WasdApp ]
 |   |  \
@@ -61,16 +61,17 @@
      \
       o app ---- [ WadsApp < GosuWindow. ]
        \  
-        \      o data_structures [ HashOfHashes, Stats, Node, Edge, Graph, 
-         \    /                    GraphReverseIterator, DataRange,
-          \  /                     VisibleRange ]
+        \      o data_structures [ HashOfHashes, GraphReverseIterator,
+         \    /                    Stats, Node, Edge, Graph, 
+          \  /                     DataRange, VisibleRange ]
            \/
-            o widgets [ Coordinates, GuiTheme,
-           /            WadsConfig, GuiContainer, 
-          /             Widget,
-         /                Panel,
-        /                 ImageWidget,
-       /                  Text,
+            o widgets [ Coordinates,
+           /            WadsConfig,
+          /             GuiContainer, 
+         /              Widget,
+        /                 Panel,
+       /                  ImageWidget,
+      /                   Text,
       |                   ErrorMessage,
       |                   PlotPoint,                      
       |                   Button,
@@ -94,7 +95,8 @@
    /    \
   /\     o textinput  [ TextField < Gosu::TextInput ]
  /  \
-/    o themes   [ WadsBrightTheme,
+/    o themes   [ GuiTheme,
+|                 WadsBrightTheme,
 |                 WadsDarkRedBrownTheme,
 |                 WadsEarthTonesTheme,
 |                 WadsNatureTheme,

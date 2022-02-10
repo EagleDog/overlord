@@ -1,4 +1,4 @@
-#  Overlord System Map
+#  Overlord Diagram
 
 FOLDERS
 
@@ -65,7 +65,7 @@ FOLDERS
        \  
         \      o data_structures [ HashOfHashes, GraphReverseIterator,
          \    /                    Stats, Node, Edge, Graph, 
-          \  /                    DataRange, VisibleRange ]
+          \  /                     DataRange, VisibleRange ]
            \/
             o widgets [ Coordinates,
            /            WadsConfig,
