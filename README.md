@@ -61,8 +61,8 @@
       o app ---- [ WadsApp < GosuWindow. ]
        \  
         \      o data_structures [ HashOfHashes, Stats, Node, Edge, Graph, 
-         \    /                    GraphReverseIterator, DataRange, VisibleRange ]
-          \  /
+         \    /                    GraphReverseIterator, DataRange,
+          \  /                     VisibleRange ]
            \/
             o widgets [ Coordinates, GuiTheme,
            /            WadsConfig, GuiContainer, 
