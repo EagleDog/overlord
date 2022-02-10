@@ -10,9 +10,7 @@
 #        add_text("Current Tile:", 900, 630)
 #        add_button("Use Eraser", 940, 680, 120)
 #
-#
-#
-#
+
 
 class EditorDisplay < Widget
     def initialize(board_file)
