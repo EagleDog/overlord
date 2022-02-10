@@ -1,7 +1,20 @@
 # maps/editor/editor.rb
 #
+#     @current_mouse_text = Text.new(10, 700, "0, 0")
+#
+#     @grid = GridDisplay.new(0, 0, 16, 21, 95)
+#     instantiate_elements(File.readlines(board_file))
+#     add_child(@grid)
+#
+#        @pallette = TilePalletteDisplay.new / add_child(@pallette)
+#        add_text("Current Tile:", 900, 630)
+#        add_button("Use Eraser", 940, 680, 120)
+#
+#
+#
+#
 
-class Editor < Widget
+class EditorDisplay < Widget
     def initialize(board_file)
         super(0, 0, GAME_WIDTH, GAME_HEIGHT)
         disable_border
@@ -15,7 +28,7 @@ class Editor < Widget
         @mouse_dragging = false
         @use_eraser = false
 
-        @current_mouse_text = Text.new(10, 700, "0, 0")
+        @current_mouse_text = Text.new(400, 400, "0, 0")  #(10, 700, "0, 0")
         add_child(@current_mouse_text)
 
         @selected_tile = nil
@@ -31,9 +44,9 @@ class Editor < Widget
         @pallette = TilePalletteDisplay.new 
         add_child(@pallette)
 
-        add_text("Current Tile:", 900, 630)
+        add_text("Current Tile:", 400, 100)  #900, 630)
 
-        add_button("Use Eraser", 940, 680, 120) do
+        add_button("Use Eraser", 400, 200, 120) do  #940, 680, 120) do
             if @use_eraser 
                 @use_eraser = false 
             else 
@@ -42,7 +55,7 @@ class Editor < Widget
             end
         end
 
-        add_button("Clear", 1080, 680, 120) do
+        add_button("Clear", 400, 300, 120) do  # 1080, 680, 120) do
             (1..@grid.grid_height-3).each do |y|
                 (1..@grid.grid_width-2).each do |x|
                     @grid.remove_tile(x, y)
@@ -155,7 +168,7 @@ class Editor < Widget
         @mouse_dragging = true
         @pallette.children.each do |pi|
             if pi.contains_click(mouse_x, mouse_y)
-                @selected_tile = PalletteTile.new(1100, 630, pi.img, 1, pi.index)
+                @selected_tile = PalletteTile.new(550, 100, pi.img, 4, pi.index)  #1100, 630
             end 
         end
         if @grid.contains_click(mouse_x, mouse_y)

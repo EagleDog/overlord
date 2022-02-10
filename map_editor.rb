@@ -10,18 +10,20 @@ include RdiaGames
 require_relative 'maps/editor'
 require_relative 'maps/pallette'
 
-GAME_WIDTH = 1280
-GAME_HEIGHT = 720
+# GAME_WIDTH = 1280
+# GAME_HEIGHT = 720
+GAME_WIDTH = 1200
+GAME_HEIGHT = 600
 BLANK_SPACE = "                                                               "
 CAPTION_TEXT = BLANK_SPACE + BLANK_SPACE + "  M A P   E D I T O R  "
 
 class MapEditor < RdiaGame
     def initialize(board_file = "maps/maps/editor_board.txt")
-        super(GAME_WIDTH, GAME_HEIGHT, CAPTION_TEXT, Editor.new(board_file))
-        register_hold_down_key(Gosu::KbA)    # Move left
-        register_hold_down_key(Gosu::KbD)    # Move right
-        register_hold_down_key(Gosu::KbW)    # Move left
-        register_hold_down_key(Gosu::KbS)    # Move left
+        super(GAME_WIDTH, GAME_HEIGHT, CAPTION_TEXT, EditorDisplay.new(board_file))
+        # register_hold_down_key(Gosu::KbA)    # Move left
+        # register_hold_down_key(Gosu::KbD)    # Move right
+        # register_hold_down_key(Gosu::KbW)    # Move left
+        # register_hold_down_key(Gosu::KbS)    # Move left
     end 
 end
 
