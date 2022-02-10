@@ -20,7 +20,7 @@ FOLDERS
  /   \
 /     o overlord   ---- [ Overlord < Scroller3 ]
 |     |   \
-|     |    o require 'scroller3', 'pathfinder', 'objects',
+|     |    o require 'scroller3', 'pathfinder', 'objects'
 |     /\
 |    /  o scroller3  ---- [ Scroller3 < RdiaGame,
 |   /    \    \             OverDisplay < ScrollerDisplay ]
@@ -45,7 +45,7 @@ FOLDERS
 |\  o map_editor
 | \  
 |  \
-|   o rdia  require 'version', 'widgets', 'app'
+|   o rdia  require 'version' 'widgets' 'app'
 |   |\
 |   | o app ---- [ RdiaGame < WasdApp ]
 |   |  \
@@ -59,20 +59,21 @@ FOLDERS
  \                     GridDisplay < Widget ]
   \
    \
-    o wads  require 'version', 'data_structure', 'widgets', 'text_input', 'app'
+    o wads  require 'version' 'data_structure' 'widgets' 'text_input' 'app'
      \
       o app ---- [ WadsApp < GosuWindow. ]
        \  
-        \      o data_structures [ HashOfHashes, Stats, Node, Edge, Graph, 
-         \    /                    GraphReverseIterator, DataRange, VisibleRange ]
-          \  /
+        \      o data_structures [ HashOfHashes, GraphReverseIterator,
+         \    /                    Stats, Node, Edge, Graph, 
+          \  /                    DataRange, VisibleRange ]
            \/
-            o widgets [ Coordinates, GuiTheme,
-           /            WadsConfig, GuiContainer, 
-          /             Widget,
-         /                Panel,
-        /                 ImageWidget,
-       /                  Text,
+            o widgets [ Coordinates,
+           /            WadsConfig,
+          /             GuiContainer, 
+         /              Widget,
+        /                 Panel,
+       /                  ImageWidget,
+      /                   Text,
       |                   ErrorMessage,
       |                   PlotPoint,                      
       |                   Button,
@@ -96,7 +97,8 @@ FOLDERS
    /    \
   /\     o textinput  [ TextField < Gosu::TextInput ]
  /  \
-/    o themes   [ WadsBrightTheme,
+/    o themes   [ GuiTheme,
+|                 WadsBrightTheme,
 |                 WadsDarkRedBrownTheme,
 |                 WadsEarthTonesTheme,
 |                 WadsNatureTheme,
