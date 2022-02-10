@@ -56,7 +56,7 @@
  \                     GridDisplay < Widget ]
   \
    \
-    o wads  require 'version', 'data_structure', 'widgets', 'text_input', 'app'
+    o wads  require 'version' 'data_structure' 'widgets' 'text_input' 'app'
      \
       o app ---- [ WadsApp < GosuWindow. ]
        \  
