@@ -5,6 +5,15 @@ require 'highline'
 
 include Wads 
 
+# class ProgressBar < Widget
+# class Point
+# class GameObject < ImageWidget
+# class Ball < GameObject
+# class Player < GameObject
+# class GridDisplay < Widget
+
+
+
 module RdiaGames
 
     # Possible interactions when one object hits another
