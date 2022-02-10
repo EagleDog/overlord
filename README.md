@@ -8,6 +8,108 @@
  - Add Pushable Blocks.
  - Add Button Tiles.
 
+## Class Mapping
+```
+   o wads ----  [ widgets ]
+   | 
+   o rdia ----  [ ProgressBar, Point, GameObject,
+  / \             Ball, Player, GridDisplay ]
+ /   \
+/     o overlord   ---- [ Overlord < Scroller3 ]
+|     |   \
+|     |    o require 'scroller3', 'pathfinder', 'objects',
+|     /\
+|    /  o scroller3  ---- [ Scroller3 < RdiaGame,
+|   /    \    \             OverDisplay < ScrollerDisplay ]
+|   |     \    \
+|   |      \    o require 'display', 'characters',
+|   |      |\             'items',  'themes'
+|   |      | \
+|   |      |\ o display   ---- [ ScrollerDisplay < Widgets ]
+|   |      | \
+|   |      |\ o characters --- [ Character < GameObject ]
+|   |      | \
+|   |      |  o items     ---- [ Wall, Brick, Dot, OutOfBounds,
+|   |      |\                    BackgroundArea, ForegroundArea,
+|   |      | \                   GoalArea < GameObject ]
+|   |       \ o objects   ---- [ Ballrag < GameObject ]
+|   |        \
+|   \         o themes    ---- [ BricksTheme < GuiTheme ]
+|    \            # WadsConfig.instance.set_current_theme(BricksTheme.new)
+|\    \
+| \    o pathfinder  ---- [ Pathfinder ]
+|  \
+|\  o map_editor
+| \  
+|  \
+|   o rdia  require 'version', 'widgets', 'app'
+|   |\
+|   | o app ---- [ RdiaGame < WasdApp ]
+|   |  \
+|   |   o Module ---- constants ( RDIA_MODE_START, etc. )
+|    \
+|     o widgets ---- [ ProgressBar < Wiget,
+|                      Point,
+|                      GameObject < ImageWidget,
+|                      Ball < GameObject,
+|                      Player < GameObject,
+ \                     GridDisplay < Widget ]
+  \
+   \
+    o wads  require 'version', 'data_structure', 'widgets', 'text_input', 'app'
+     \
+      o app ---- [ WadsApp < GosuWindow. ]
+       \  
+        \      o data_structures [ HashOfHashes, Stats, Node, Edge, Graph, 
+         \    /                    GraphReverseIterator, DataRange, VisibleRange ]
+          \  /
+           \/
+            o widgets [ Coordinates, GuiTheme,
+           /            WadsConfig, GuiContainer, 
+          /             Widget,
+         /                Panel,
+        /                 ImageWidget,
+       /                  Text,
+      |                   ErrorMessage,
+      |                   PlotPoint,                      
+      |                   Button,
+      |                   DeleteButton,
+      |                   Document,
+      |                   InfoBox,
+      |                   Dialog,
+      |                   WidgetResult,
+      |                   Line,
+      |                   AxisLines
+      |                   VerticalAxisLable,
+      |                   HorizontalAxisLable,
+      |                   Table,
+      |                   SingleSelectTable,
+      |                   MultiSelectTable,
+      |                   Plot,
+      |                   Node Widget,
+      |                   NodeIconWidget,
+     /\                   GraphWidget ]
+    /  \
+   /    \
+  /\     o textinput  [ TextField < Gosu::TextInput ]
+ /  \
+/    o themes   [ WadsBrightTheme,
+|                 WadsDarkRedBrownTheme,
+|                 WadsEarthTonesTheme,
+|                 WadsNatureTheme,
+|                 WadsPurpleTheme,
+|                 WadsAquaTheme,
+\                 WadsNoIconTheme ]
+ \
+  o layouts  [ WadsLayout,
+               SectionLayout,
+               VerticalColumnLayout,
+               HeaderContentLayout,
+               ContentFooterLayout,
+               EastWestLayout,
+               TopMiddleBottomLayout,
+               BorderLayout ]
+```
 
 ## Installation
 ```
