@@ -43,13 +43,17 @@ class Scroller3 < RdiaGame
 end
 
 
-class OverDisplay  < ScrollerDisplay
+class OverDisplay < ScrollerDisplay
 
     def initialize
+        super
         @left = ''
         @right = ''
         @up = ''
         @down = ''
+        # @ball = Ball.new(200, 200)
+        # @ball.start_move_in_direction(DEG_90 - 0.2)
+        # add_child(@ball)
     end
 
     def action_map id
@@ -60,26 +64,18 @@ class OverDisplay  < ScrollerDisplay
     end
 
     def handle_key_held_down id, mouse_x, mouse_y
-        # if id == Gosu::KbA or id == Gosu::KbLeft
-        #     @player.move_left(@grid)
         @player.move_left(@grid) if action_map(id) == @left
         @player.move_right(@grid) if action_map(id) == @right
         @player.move_up(@grid) if action_map(id) == @up
         @player.move_down(@grid) if action_map(id) == @down
-#        end
         #puts "#{@player.x}, #{@player.y}    Camera: #{@camera_x}, #{@camera_y}   Tile: #{@grid.tile_at_absolute(@player.x, @player.y)}"
     end
 
     def handle_key_press id, mouse_x, mouse_y
-        if id == Gosu::KbA or id == Gosu::KbLeft
-            @player.start_move_left 
-        elsif id == Gosu::KbD or id == Gosu::KbRight
-            @player.start_move_right 
-        elsif id == Gosu::KbW or id == Gosu::KbUp
-            @player.start_move_up 
-        elsif id == Gosu::KbS or id == Gosu::KbDown
-            @player.start_move_down
-        end
+        @player.start_move_left if action_map(id) == @left
+        @player.start_move_right if action_map(id) == @right
+        @player.start_move_up if action_map(id) == @up
+        @player.start_move_down if action_map(id) == @down
     end
 
     def handle_key_up id, mouse_x, mouse_y

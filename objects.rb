@@ -15,6 +15,8 @@ class Ballrag < GameObject
     end
 
     def update(update_count, mouse_x, mouse_y)
+
+
     end
 
 end

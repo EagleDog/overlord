@@ -3,19 +3,20 @@
 #     @current_mouse_text = Text.new(10, 700, "0, 0")
 #
 #     @grid = GridDisplay.new(0, 0, 16, 21, 95)
-#     instantiate_elements(File.readlines(board_file))
+#     create_board(File.readlines(board_file))
 #     add_child(@grid)
 #
-#        @pallette = TilePalletteDisplay.new / add_child(@pallette)
-#        add_text("Current Tile:", 900, 630)
-#        add_button("Use Eraser", 940, 680, 120)
+#    @pallette = TilePalletteDisplay.new / add_child(@pallette)
+#    add_text("Current Tile:", 900, 630)
+#    add_button("Use Eraser", 940, 680, 120)
 #
 
-
 class EditorDisplay < Widget
-    def initialize(board_file)
+    def initialize()
         super(0, 0, GAME_WIDTH, GAME_HEIGHT)
         disable_border
+        @board_file = 'maps/maps/editor_board.txt'
+
         @camera_x = 0
         @camera_y = 0
 
@@ -34,9 +35,13 @@ class EditorDisplay < Widget
         @tileset = Gosu::Image.load_tiles("media/basictiles.png", 16, 16, tileable: true)
         @diagonal_tileset = Gosu::Image.load_tiles("media/diagonaltiles.png", 16, 16, tileable: true)
 
+
+        @grid = GridDisplay.new(0, 0, 16, 21, 40)   #21, 95)
+
+
+        @grid.display_grid = true
         #@grid = GridDisplay.new(0, 0, 16, 50, 38, {ARG_SCALE => 2})
-        @grid = GridDisplay.new(0, 0, 16, 21, 95)
-        instantiate_elements(File.readlines(board_file))
+        create_board(File.readlines(@board_file))
         add_child(@grid)
 
         @pallette = TilePalletteDisplay.new 
@@ -44,6 +49,26 @@ class EditorDisplay < Widget
 
         add_text("Current Tile:", 400, 100)  #900, 630)
 
+        add_erasor_button
+        add_clear_button
+
+        add_shadow_boxes
+        debug
+    end 
+
+    def handle_key_press id, mouse_x, mouse_y
+        if id == Gosu::KbA or id == Gosu::KbLeft
+            @player.start_move_left 
+        elsif id == Gosu::KbD or id == Gosu::KbRight
+            @player.start_move_right 
+        elsif id == Gosu::KbW or id == Gosu::KbUp
+            @player.start_move_up 
+        elsif id == Gosu::KbS or id == Gosu::KbDown
+            @player.start_move_down
+        end
+    end
+
+    def add_erasor_button
         add_button("Use Eraser", 400, 200, 120) do  #940, 680, 120) do
             if @use_eraser 
                 @use_eraser = false 
@@ -52,7 +77,9 @@ class EditorDisplay < Widget
                 WidgetResult.new(false)
             end
         end
+    end
 
+    def add_clear_button
         add_button("Clear", 400, 300, 120) do  # 1080, 680, 120) do
             (1..@grid.grid_height-3).each do |y|
                 (1..@grid.grid_width-2).each do |x|
@@ -61,17 +88,7 @@ class EditorDisplay < Widget
             end
             WidgetResult.new(false)
         end
-
-        # highlight the key tiles we use
-        # the rest are background
-        add_shadow_box(5)
-        add_shadow_box(18)
-        add_shadow_box(19)
-        add_shadow_box(38)
-        add_shadow_box(59)
-        add_shadow_box(64)
-        add_shadow_box(66)
-    end 
+    end
 
     def add_shadow_box(tile_index)
         x, y = @pallette.get_coords_for_index(tile_index)
@@ -82,6 +99,19 @@ class EditorDisplay < Widget
         shadow_box.disable_border
         add_child(shadow_box)
     end
+
+    def add_shadow_boxes       # highlight the key tiles we use
+        add_shadow_box(5)      # the rest are background
+        add_shadow_box(18)
+        add_shadow_box(19)
+        add_shadow_box(38)
+        add_shadow_box(59)
+        add_shadow_box(64)
+        add_shadow_box(66)
+    end
+
+
+
 
     def draw 
         @children.each do |child|
@@ -196,11 +226,11 @@ class EditorDisplay < Widget
 
 
     # Takes an array of strings that represents the board
-    def instantiate_elements(dsl)         
+    def create_board(map_array)         
         @grid.clear_tiles
         grid_y = 0
         grid_x = 0
-        dsl.each do |line|
+        map_array.each do |line|
             index = 0
             while index < line.size
                 char = line[index..index+1].strip
@@ -249,4 +279,17 @@ class EditorDisplay < Widget
             end
         }
     end
+
+    def debug
+        puts 'tile_size: ' + @grid.tile_size.to_s
+        puts 'grid_width: ' + @grid.grid_width.to_s
+        puts 'grid_height: ' + @grid.grid_height.to_s
+#        puts 'tiles: ' + @grid.tiles.to_s
+        puts 'scale: ' + @grid.scale.to_s
+        puts 'display_grid: ' + @grid.display_grid.to_s
+        puts 'grid_x_offset: ' + @grid.grid_x_offset.to_s    # so that we can use negative coordinates 
+        puts 'grid_y_offset: ' + @grid.grid_y_offset.to_s    
+
+    end
+
 end

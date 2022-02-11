@@ -1,5 +1,7 @@
 require 'gosu'
 require_relative 'widgets'
+require_relative 'widgets/other'
+require_relative 'widgets/graph'
 
 module Wads
     #

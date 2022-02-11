@@ -21,13 +21,13 @@ end
 
 class TilePalletteDisplay < Widget
     def initialize
-        super(900, 10, 360, 600)
+        super(700, 10, 360, 600)
         #disable_border
-        determineTileCords
+        determineTileCoords
         addPalletteItems
     end 
 
-    def determineTileCords
+    def determineTileCoords
         tempX = 10
         tempY = 10
         tempCounter = 0
@@ -56,7 +56,7 @@ class TilePalletteDisplay < Widget
 
     def addPalletteItems 
         @tileCords.map do |x, y, order|
-            add_child(PalletteTile.new(@x + x, @y + y, "./media/tile#{order.to_s}.png", 2, order))
+            add_child(PalletteTile.new(@x + x, @y + y, "./media/tiles/tile#{order.to_s}.png", 2, order))
         end
     end
 end

@@ -47,6 +47,10 @@ class ScrollerDisplay < Widget
         @player.set_absolute_position(400, 150)
         add_child(@player)
 
+        # @ball = Ballrag.new #(200, 200)
+        # @ball.start_move_in_direction(DEG_90 - 0.2)
+        # add_child(@ball)
+
         @grid = GridDisplay.new(0, 0, 16, 50, 38, {ARG_SCALE => 2})
         instantiate_elements(File.readlines("maps/maps/aboard1.txt"))
         add_child(@grid)

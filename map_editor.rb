@@ -12,14 +12,17 @@ require_relative 'maps/pallette'
 
 # GAME_WIDTH = 1280
 # GAME_HEIGHT = 720
-GAME_WIDTH = 1200
+GAME_WIDTH = 1100
 GAME_HEIGHT = 600
 BLANK_SPACE = "                                                               "
 CAPTION_TEXT = BLANK_SPACE + BLANK_SPACE + "  M A P   E D I T O R  "
 
+# Main Tiles: 0 wall, 5 bricks, 18 yellow, 19 green, 38 tree, 59 torches, 64 grass  
+
+
 class MapEditor < RdiaGame
-    def initialize(board_file = "maps/maps/editor_board.txt")
-        super(GAME_WIDTH, GAME_HEIGHT, CAPTION_TEXT, EditorDisplay.new(board_file))
+    def initialize #(board_file = "maps/maps/editor_board.txt")
+        super(GAME_WIDTH, GAME_HEIGHT, CAPTION_TEXT, EditorDisplay.new)
         # register_hold_down_key(Gosu::KbA)    # Move left
         # register_hold_down_key(Gosu::KbD)    # Move right
         # register_hold_down_key(Gosu::KbW)    # Move left
