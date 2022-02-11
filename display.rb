@@ -81,7 +81,6 @@ class ScrollerDisplay < Widget
         @camera_x = [[@player.x - (GAME_WIDTH.to_f / 2), 0].max, @grid.grid_width * 32 - GAME_WIDTH].min
         @camera_y = [[@player.y - (GAME_HEIGHT.to_f / 2), 0].max, @grid.grid_height * 32 - GAME_HEIGHT].min
         #puts "#{@player.x}, #{@player.y}    Camera: #{@camera_x}, #{@camera_y}"
-#        @ball.update
     end
 
     def interact_with_widgets(widgets)

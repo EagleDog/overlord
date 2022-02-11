@@ -2,7 +2,6 @@ require_relative 'scroller3'
 require_relative 'bin/pathfinder'
 require_relative 'objects'
 
-
 class Overlord < Scroller3
 	def initialize
 #		@scroller = ScrollerDisplay.new
