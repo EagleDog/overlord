@@ -8,6 +8,7 @@ require_relative 'data_structures'
 require_relative 'constants'
 require_relative 'widgets/themes'
 require_relative 'widgets/layouts'
+#require_relative 'image_widget'
 #require_relative 'other'
 #require_relative 'graph'
 

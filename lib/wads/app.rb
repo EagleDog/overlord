@@ -2,6 +2,7 @@ require 'gosu'
 require_relative 'widgets'
 require_relative 'widgets/other'
 require_relative 'widgets/graph'
+require_relative 'widgets/image_widget'
 
 module Wads
     #

@@ -1,5 +1,5 @@
 # other.rb
-#   ImageWidget, Text, ErrorMessage, PlotPoint,
+#   Text, ErrorMessage, PlotPoint,
 #   Button, DeleteButton, Document, InfoBox,
 #   Dialog, WidgetResult, Line, AxisLines,
 #   VerticalAxisLablel, HorizontalAxisLabel,
@@ -9,51 +9,7 @@
 
 module Wads
 
-    #
-    # Displays an image on the screen at the specific x, y location. The image
-    # can be scaled by setting the scale attribute. The image attribute to the
-    # construcor can be the string file location or a Gosu::Image instance
-    #
-    class ImageWidget < Widget
-        attr_accessor :img 
-        attr_accessor :scale
-
-        def initialize(x, y, image, args = {}) 
-            super(x, y)
-            if image.is_a? String
-                @img = Gosu::Image.new(image)
-            elsif image.is_a? Gosu::Image 
-                @img = image 
-            elsif image.is_a? Gosu::Color
-                @img = nil
-                @override_color = image
-            else 
-                raise "ImageWidget requires either a filename or a Gosu::Image object"
-            end
-            if args[ARG_THEME]
-                @gui_theme = args[ARG_THEME]
-            end
-            @scale = 1
-            disable_border
-            disable_background
-            set_dimensions(@img.width, @img.height) if @img
-        end
-
-        def render 
-            if @img.nil?
-                # TODO draw a box
-                Gosu::draw_rect(@x, @y, @width - 1, @height - 1, @override_color, relative_z_order(Z_ORDER_GRAPHIC_ELEMENTS))
-            else
-                @img.draw @x, @y, z_order, @scale, @scale
-            end
-        end
-
-        def widget_z 
-            Z_ORDER_FOCAL_ELEMENTS
-        end
-    end 
-
-    #
+    # __Text__
     # Displays a text label on the screen at the specific x, y location.
     # The font specified by the current theme is used.
     # The theme text color is used, unless the color parameter specifies an override.
@@ -103,7 +59,7 @@ module Wads
         end
     end 
 
-    #
+    # __ErrorMessage__
     # An ErrorMessage is a subclass of text that uses a red color
     #
     class ErrorMessage < Text
@@ -112,7 +68,7 @@ module Wads
         end
     end 
 
-    #
+    # __PlotPoint__
     # A data point to be used in a Plot widget. This object holds
     # the x, y screen location as well as the data values for x, y.
     #
@@ -159,7 +115,7 @@ module Wads
         end
     end 
 
-    #
+    # __Button__
     # Displays a button at the specified x, y location.
     # The button width is based on the label text unless specified
     # using the optional parameter. The code to executeon a button
@@ -168,7 +124,6 @@ module Wads
     # add_button("Test Button", 10, 10) do 
     #   puts "User hit the test button"
     # end
-
     class Button < Widget
         attr_accessor :label
         attr_accessor :is_pressed
@@ -227,7 +182,7 @@ module Wads
         end
     end 
 
-    #
+    # __DeleteButton__
     # A subclass of button that renders a red X instead of label text
     #
     class DeleteButton < Button
@@ -243,7 +198,7 @@ module Wads
         end 
     end 
 
-    #
+    # __Document__
     # Displays multiple lines of text content at the specified coordinates
     #
     class Document < Widget
@@ -272,6 +227,7 @@ module Wads
         end
     end 
 
+    # __InfoBox__
     class InfoBox < Widget 
         def initialize(x, y, width, height, title, content, args = {}) 
             super(x, y) 
@@ -295,6 +251,7 @@ module Wads
         end 
     end
 
+    # __Dialog__
     class Dialog < Widget
         attr_accessor :textinput
 
@@ -369,7 +326,7 @@ module Wads
         end
     end 
 
-    #
+    # __WdigetResult__
     # A result object returned from handle methods that instructs the parent widget
     # what to do. A close_widget value of true instructs the recipient to close
     # either the overlay window or the entire app, based on the context of the receiver.
@@ -389,7 +346,7 @@ module Wads
         end
     end
 
-    #
+    # __Line__
     # Renders a line from x, y to x2, y2. The theme graphics elements color
     # is used by default, unless specified using the optional parameter.
     #
@@ -419,7 +376,7 @@ module Wads
         end
     end 
 
-    #
+    # __AxisLines__
     # A very specific widget used along with a Plot to draw the x and y axis lines.
     # Note that the labels are drawn using separate widgets.
     #
@@ -441,7 +398,7 @@ module Wads
         end
     end
 
-    #
+    # __VerticalAxisLabel__
     # Labels and tic marks for the vertical axis on a plot
     #
     class VerticalAxisLabel < Widget
@@ -471,7 +428,7 @@ module Wads
         end
     end 
 
-    #
+    # __HorizontalAxisLabel__
     # Labels and tic marks for the horizontal axis on a plot
     #
     class HorizontalAxisLabel < Widget
@@ -500,7 +457,7 @@ module Wads
         end
     end 
 
-    #
+    # __Table__
     # Displays a table of information at the given coordinates.
     # The headers are an array of text labels to display at the top of each column.
     # The max_visible_rows specifies how many rows are visible at once.
@@ -666,7 +623,7 @@ module Wads
         end
     end
 
-    #
+    # __SingleSelectTable__
     # A table where the user can select one row at a time.
     # The selected row has a background color specified by the selection color of the
     # current theme.
@@ -758,7 +715,7 @@ module Wads
         end
     end 
 
-    #
+    # __MultiSelectTable__
     # A table where the user can select multiple rows at a time.
     # Selected rows have a background color specified by the selection color of the
     # current theme.
@@ -855,7 +812,7 @@ module Wads
         end
     end 
 
-    #
+    # __Plot__
     # A two-dimensional graph display which plots a number of PlotPoint objects.
     # Options include grid lines that can be displayed, as well as whether lines
     # should be drawn connecting each point in a data set.
@@ -1082,7 +1039,7 @@ module Wads
         end 
     end 
 
-    #
+    # __NodeWidget__
     # A graphical representation of a node in a graph using a button-style, i.e
     # a rectangular border with a text label.
     # The choice to use this display class is dictated by the use_icons attribute
@@ -1130,7 +1087,7 @@ module Wads
         end
     end 
 
-    #
+    # __NodeIconWidget__
     # A graphical representation of a node in a graph using circular icons 
     # and adjacent text labels.
     # The choice to use this display class is dictated by the use_icons attribute
@@ -1204,7 +1161,7 @@ module Wads
         end
     end 
 
-    #
+    # __GraphWidget__
     # Given a single node or a graph data structure, this widget displays
     # a visualization of the graph using one of the available node widget classes.
     # There are different display modes that control what nodes within the graph 

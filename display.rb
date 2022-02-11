@@ -47,9 +47,8 @@ class ScrollerDisplay < Widget
         @player.set_absolute_position(400, 150)
         add_child(@player)
 
-        # @ball = Ballrag.new #(200, 200)
-        # @ball.start_move_in_direction(DEG_90 - 0.2)
-        # add_child(@ball)
+        @ball = Ballrag.new
+        add_child(@ball)
 
         @grid = GridDisplay.new(0, 0, 16, 50, 38, {ARG_SCALE => 2})
         instantiate_elements(File.readlines("maps/maps/aboard1.txt"))
@@ -71,6 +70,7 @@ class ScrollerDisplay < Widget
         Gosu.translate(-@camera_x, -@camera_y) do
             @grid.draw
             @player.draw
+            @ball.draw
         end
     end 
 
@@ -81,6 +81,7 @@ class ScrollerDisplay < Widget
         @camera_x = [[@player.x - (GAME_WIDTH.to_f / 2), 0].max, @grid.grid_width * 32 - GAME_WIDTH].min
         @camera_y = [[@player.y - (GAME_HEIGHT.to_f / 2), 0].max, @grid.grid_height * 32 - GAME_HEIGHT].min
         #puts "#{@player.x}, #{@player.y}    Camera: #{@camera_x}, #{@camera_y}"
+#        @ball.update
     end
 
     def interact_with_widgets(widgets)

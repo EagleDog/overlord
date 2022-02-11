@@ -11,8 +11,8 @@ class Overlord < Scroller3
 	end 
 
 	def setup
-        @pathfinder = Pathfinder.new
-        @pathfinder.setup
+        # @pathfinder = Pathfinder.new
+        # @pathfinder.setup
 		# @balljack = Ballrag.new
 		# @balljack.set_absolute_position(300, 100)
 #		@scroller.add_child(@balljack)
