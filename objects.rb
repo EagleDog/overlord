@@ -3,8 +3,8 @@
 class Ballrag < GameObject
     def initialize
         super(COLOR_WHITE)
-        @x = 300
-        @y = 300
+        @x = 250
+        @y = 150
         set_dimensions(15, 15)
     end
 
