@@ -12,37 +12,17 @@ class ScrollerDisplay < Widget
         @camera_x = 0
         @camera_y = 0
 
-        header_panel = add_panel(SECTION_NORTH)
-        header_panel.get_layout.add_text("Test Scroller",
-                                         { ARG_TEXT_ALIGN => TEXT_ALIGN_CENTER,
-                                           ARG_USE_LARGE_FONT => true})
-        subheader_panel = header_panel.get_layout.add_vertical_panel({ARG_LAYOUT => LAYOUT_EAST_WEST,
-                                                                      ARG_DESIRED_WIDTH => GAME_WIDTH})
-        subheader_panel.disable_border
-        west_panel = subheader_panel.add_panel(SECTION_WEST)
-        west_panel.get_layout.add_text("Score")
-        @score_text = west_panel.get_layout.add_text("#{@score}")
-        
-        east_panel = subheader_panel.add_panel(SECTION_EAST)
-        east_panel.get_layout.add_text("Level", {ARG_TEXT_ALIGN => TEXT_ALIGN_RIGHT})
-        @level_text = east_panel.get_layout.add_text("#{@level}",
-                                                     {ARG_TEXT_ALIGN => TEXT_ALIGN_RIGHT})
-        
+#        @left, @right, @up, @down = ''
+
         # TODO put this back when we are ready to release, instructions to the user
         #add_overlay(create_overlay_widget)
 
-        @tileset = Gosu::Image.load_tiles(MEDIA_PATH + "basictiles.png", 16, 16, tileable: true)
-        @blue_brick = @tileset[1]   # the brick with an empty pixel on the left and right, so there is a gap
-        @red_wall = @tileset[7]
-        @yellow_dot = @tileset[18]
-        @green_dot = @tileset[19]
-        @fire_transition_tile = @tileset[66]
-        @diagonal_tileset = Gosu::Image.load_tiles(MEDIA_PATH + "diagonaltiles.png", 16, 16, tileable: true)
-        @red_wall_se = @diagonal_tileset[0]
-        @red_wall_sw = @diagonal_tileset[7]
-        @red_wall_nw = @diagonal_tileset[13]
-        @red_wall_ne = @diagonal_tileset[10]
+        load_panels
+        load_tiles
+        load_objects
+    end 
 
+    def load_objects
         @player = Character.new
         @player.set_absolute_position(400, 150)
         add_child(@player)
@@ -51,16 +31,17 @@ class ScrollerDisplay < Widget
         add_child(@ball)
 
         @grid = GridDisplay.new(0, 0, 16, 50, 38, {ARG_SCALE => 2})
-        instantiate_elements(File.readlines("maps/maps/aboard1.txt"))
+        create_board(File.readlines("maps/maps/aboard1.txt"))
         add_child(@grid)
-    end 
+    end
+
 
     def draw 
         if @show_border
             draw_border
         end
         @children.each do |child|
-            if child.is_a? GridDisplay or child.is_a? Character
+            if child.is_a? GridDisplay or child.is_a? Character or child.is_a? Ballrag
                 # skip
             else
                 child.draw
@@ -81,6 +62,8 @@ class ScrollerDisplay < Widget
         @camera_x = [[@player.x - (GAME_WIDTH.to_f / 2), 0].max, @grid.grid_width * 32 - GAME_WIDTH].min
         @camera_y = [[@player.y - (GAME_HEIGHT.to_f / 2), 0].max, @grid.grid_height * 32 - GAME_HEIGHT].min
         #puts "#{@player.x}, #{@player.y}    Camera: #{@camera_x}, #{@camera_y}"
+
+        interact_with_widgets(children)
     end
 
     def interact_with_widgets(widgets)
@@ -144,29 +127,26 @@ class ScrollerDisplay < Widget
         true
     end
 
+    def action_map id
+        return 'left' if id == Gosu::KbA or id == Gosu::KbLeft
+        return 'right' if id == Gosu::KbD or id == Gosu::KbRight
+        return 'up' if id == Gosu::KbW or id == Gosu::KbUp
+        return 'down' if id == Gosu::KbS or id == Gosu::KbDown
+    end
+
     def handle_key_held_down id, mouse_x, mouse_y
-        if id == Gosu::KbA or id == Gosu::KbLeft
-            @player.move_left(@grid)
-        elsif id == Gosu::KbD or id == Gosu::KbRight
-            @player.move_right(@grid)
-        elsif id == Gosu::KbW or id == Gosu::KbUp
-            @player.move_up(@grid)
-        elsif id == Gosu::KbS or id == Gosu::KbDown
-            @player.move_down(@grid)
-        end
+        @player.move_left(@grid) if action_map(id) == 'left'
+        @player.move_right(@grid) if action_map(id) == 'right'
+        @player.move_up(@grid) if action_map(id) == 'up'
+        @player.move_down(@grid) if action_map(id) == 'down'
         #puts "#{@player.x}, #{@player.y}    Camera: #{@camera_x}, #{@camera_y}   Tile: #{@grid.tile_at_absolute(@player.x, @player.y)}"
     end
 
     def handle_key_press id, mouse_x, mouse_y
-        if id == Gosu::KbA or id == Gosu::KbLeft
-            @player.start_move_left 
-        elsif id == Gosu::KbD or id == Gosu::KbRight
-            @player.start_move_right 
-        elsif id == Gosu::KbW or id == Gosu::KbUp
-            @player.start_move_up 
-        elsif id == Gosu::KbS or id == Gosu::KbDown
-            @player.start_move_down
-        end
+        @player.start_move_left if action_map(id) == 'left'
+        @player.start_move_right if action_map(id) == 'right'
+        @player.start_move_up if action_map(id) == 'up'
+        @player.start_move_down if action_map(id) == 'down'
     end
 
     def handle_key_up id, mouse_x, mouse_y
@@ -190,12 +170,47 @@ class ScrollerDisplay < Widget
         result
     end
 
+
+    def load_panels
+        header_panel = add_panel(SECTION_NORTH)
+        header_panel.get_layout.add_text("Test Scroller",
+                                         { ARG_TEXT_ALIGN => TEXT_ALIGN_CENTER,
+                                           ARG_USE_LARGE_FONT => true})
+        subheader_panel = header_panel.get_layout.add_vertical_panel({ARG_LAYOUT => LAYOUT_EAST_WEST,
+                                                                      ARG_DESIRED_WIDTH => GAME_WIDTH})
+        subheader_panel.disable_border
+        west_panel = subheader_panel.add_panel(SECTION_WEST)
+        west_panel.get_layout.add_text("Score")
+        @score_text = west_panel.get_layout.add_text("#{@score}")
+        
+        east_panel = subheader_panel.add_panel(SECTION_EAST)
+        east_panel.get_layout.add_text("Level", {ARG_TEXT_ALIGN => TEXT_ALIGN_RIGHT})
+        @level_text = east_panel.get_layout.add_text("#{@level}",
+                                                     {ARG_TEXT_ALIGN => TEXT_ALIGN_RIGHT})
+    end
+
+    def load_tiles
+        @tileset = Gosu::Image.load_tiles(MEDIA_PATH + "basictiles.png", 16, 16, tileable: true)
+        @blue_brick = @tileset[1]   # the brick with an empty pixel on the left and right, so there is a gap
+        @red_wall = @tileset[7]
+        @yellow_dot = @tileset[18]
+        @green_dot = @tileset[19]
+        @fire_transition_tile = @tileset[66]
+        @diagonal_tileset = Gosu::Image.load_tiles(MEDIA_PATH + "diagonaltiles.png", 16, 16, tileable: true)
+        @red_wall_se = @diagonal_tileset[0]
+        @red_wall_sw = @diagonal_tileset[7]
+        @red_wall_nw = @diagonal_tileset[13]
+        @red_wall_ne = @diagonal_tileset[10]
+    end
+
+
+
     # Takes an array of strings that represents the board
-    def instantiate_elements(dsl)         
+    def create_board(map_array)         
         @grid.clear_tiles
         grid_y = 0
         grid_x = 0
-        dsl.each do |line|
+        map_array.each do |line|
             index = 0
             while index < line.size
                 char = line[index..index+1].strip
@@ -207,21 +222,14 @@ class ScrollerDisplay < Widget
                     tile_index = char.to_i
                     #puts "Using index #{tile_index}."
                     # This is temporary, we need a way to define and store metadata for tiles
-                    if tile_index == 5
-                        img = Wall.new(@tileset[tile_index])
-                    else
-                        img = BackgroundArea.new(@tileset[tile_index])
-                    end
-                #elsif char == "B"
-                #    img = Brick.new(@blue_brick)
-                elsif char == "W"
-                    img = Wall.new(@blue_brick)
-                elsif char == "Y"
-                    img = Dot.new(@yellow_dot)
-                elsif char == "G"
-                    img = Dot.new(@green_dot)
-                elsif char == "F"
-                    img = OutOfBounds.new(@fire_transition_tile)
+                    img = Wall.new(@tileset[tile_index]) if tile_index == 5
+                    img = BackgroundArea.new(@tileset[tile_index]) if tile_index != 5
+                else
+                    img = Brick.new(@blue_brick) if char == "B"
+                    img = Wall.new(@blue_brick) if char == "W"
+                    img = Dot.new(@yellow_dot) if char == "Y"
+                    img = Dot.new(@green_dot) if char == "G"
+                    img = OutOfBounds.new(@fire_transition_tile) if char == "F"
                 end
                 
                 if img.nil?
@@ -237,4 +245,62 @@ class ScrollerDisplay < Widget
             grid_y = grid_y + 1
         end
     end 
+
+######                                  ########
+######   BOUNCE     BOUNCE   BOUNCE     ########
+######                                  ########
+
+    def square_bounce(w)
+        @ball.speed = 20
+        if @ball.center_x >= w.x and @ball.center_x <= w.right_edge
+            @ball.bounce_y
+        elsif @ball.center_y >= w.y and @ball.center_y <= w.bottom_edge
+            @ball.bounce_x
+        else 
+            #info("wall doesnt know how to bounce ball. #{w.x}  #{@ball.center_x}  #{w.right_edge}")
+            quad = @ball.relative_quad(w)
+            #info("Going to bounce off relative quad #{quad}")
+            gdd = nil
+            if quad == QUAD_NW 
+                gdd = @ball.x_or_y_dimension_greater_distance(w.x, w.y)        
+            elsif quad == QUAD_NE
+                gdd = @ball.x_or_y_dimension_greater_distance(w.right_edge, w.y)
+            elsif quad == QUAD_SE
+                gdd = @ball.x_or_y_dimension_greater_distance(w.right_edge, w.bottom_edge)
+            elsif quad == QUAD_SW
+                gdd = @ball.x_or_y_dimension_greater_distance(w.x, w.bottom_edge)
+            else 
+                info("ERROR adjust for ball accel from quad #{quad}")
+            end
+
+            if gdd == X_DIM
+                @ball.bounce_x
+            else 
+                # Right now, if it is not defined, one of the diagonal quadrants
+                # we are bouncing on the y dimension.
+                # Not technically accurate, but probably good enough for now
+                @ball.bounce_y
+            end
+        end
+    end 
+
+    def diagonal_bounce(w)
+        if @ball.direction > DEG_360 
+            raise "ERROR ball radians are above double pi #{@ball.direction}. Cannot adjust triangle accelerations"
+        end
+
+        axis = AXIS_VALUES[w.orientation]
+        if @ball.will_hit_axis(axis)
+            #puts "Triangle bounce"
+            @ball.bounce(axis)
+        else 
+            #puts "Square bounce"
+            square_bounce(w)
+        end
+    end 
+
+
+
+
+
 end

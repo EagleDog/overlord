@@ -110,7 +110,7 @@ class Character < GameObject
                     set_absolute_position(proposed_next_x, proposed_next_y)
                 end
                 # 
-                #    info("Can't move any further because #{widgets_at_proposed_spot.size} widget(s) are there ")
+                    info("Can't move any further because #{widgets_at_proposed_spot.size} widget(s) are there ")
             end
         end
     end
