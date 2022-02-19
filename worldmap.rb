@@ -3,6 +3,8 @@ class WorldMap
     def initialize(grid)
 #        super(0, 0, GAME_WIDTH, GAME_HEIGHT)
         @grid = grid
+        load_tiles
+        assign_numbers
     end
 
     def load_tiles      #     LOAD_TILES     LOAD_TILES     LOAD_TILES
@@ -10,27 +12,30 @@ class WorldMap
             "media/basictiles.png", 
             16, 16, 
             tileable: true)
-        @blue_brick = @tileset[1]   # the brick with an empty pixel on the left and right, so there is a gap
-        @red_wall = @tileset[7]
-        @yellow_dot = @tileset[18]
-        @green_dot = @tileset[19]
-        @fire_transition_tile = @tileset[66]
+
         @diagonal_tileset = 
             Gosu::Image.load_tiles( 
             "media/diagonaltiles.png", 
             16, 16, 
             tileable: true)
+    end
+
+    def assign_numbers              # ASSIGN_NUMBERS
+        @blue_brick = @tileset[1]   # the brick with an empty pixel on the left and right, so there is a gap
+        @red_wall = @tileset[7]
+        @yellow_dot = @tileset[18]
+        @green_dot = @tileset[19]
+        @fire_transition_tile = @tileset[66]
+
         @red_wall_se = @diagonal_tileset[0]
         @red_wall_sw = @diagonal_tileset[7]
         @red_wall_nw = @diagonal_tileset[13]
         @red_wall_ne = @diagonal_tileset[10]
     end
 
-    # CREATE_BOARD        CREATE_BOARD       CREATE_BOARD
-    #
     # Takes an array of strings that represents the board
-    def create_board(map_array)         
-        @grid.clear_tiles
+    def create_board(map_array)
+        @grid.clear_tiles                  # CREATE_BOARD
         grid_y = 0
         grid_x = 0
         map_array.each do |line|

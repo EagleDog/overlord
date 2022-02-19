@@ -1,7 +1,21 @@
 #
 #  tiles.rb
 #
-#
+
+
+class Block < GameObject
+    def initialize(image)
+        super(image)
+        @can_move = true
+    end
+
+    def interaction_results
+        [RDIA_REACT_BOUNCE, RDIA_REACT_CONSUME, RDIA_REACT_SCORE]
+    end
+
+end
+
+
 
 class Wall < GameObject
     def initialize(image)
