@@ -24,7 +24,7 @@ class ScrollerDisplay < Widget
 
     def load_objects
         @player = Character.new
-        @player.set_absolute_position(400, 150)
+        @player.set_absolute_position(500, 150)
         add_child(@player)
 
         @ball = Ballrag.new
@@ -56,6 +56,7 @@ class ScrollerDisplay < Widget
     end 
 
     def handle_update update_count, mouse_x, mouse_y
+        ball_logic
         # Scrolling follows player
         # @camera_x = [[@cptn.x - WIDTH / 2, 0].max, @map.width * 50 - WIDTH].min
         # @camera_y = [[@cptn.y - HEIGHT / 2, 0].max, @map.height * 50 - HEIGHT].min 
@@ -65,6 +66,26 @@ class ScrollerDisplay < Widget
 
         interact_with_widgets(children)
     end
+
+    def ball_logic
+        proposed_next_x, proposed_next_y = @ball.proposed_move
+        widgets_at_proposed_spot = @grid.proposed_widget_at(@ball, proposed_next_x, proposed_next_y)
+        if widgets_at_proposed_spot.empty?
+            if @ball.overlaps_with_proposed(proposed_next_x, proposed_next_y, @player)
+                #info("We hit the player!")
+                bounce_off_player(proposed_next_x, proposed_next_y)
+            else
+                @ball.set_absolute_position(proposed_next_x, proposed_next_y)
+            end
+        else 
+            #info("Found candidate widgets to interact")
+            if interact_with_widgets(widgets_at_proposed_spot) #, update_count)
+                @ball.set_absolute_position(proposed_next_x, proposed_next_y) 
+            end
+        end
+    end
+
+
 
     def interact_with_widgets(widgets)
         if widgets.size == 1
@@ -189,8 +210,9 @@ class ScrollerDisplay < Widget
                                                      {ARG_TEXT_ALIGN => TEXT_ALIGN_RIGHT})
     end
 
-    def load_tiles
-        @tileset = Gosu::Image.load_tiles(MEDIA_PATH + "basictiles.png", 16, 16, tileable: true)
+    def load_tiles      #                                                                   LOAD_TILES
+        @tileset = Gosu::Image.load_tiles(MEDIA_PATH + 
+                    "basictiles.png", 16, 16, tileable: true)
         @blue_brick = @tileset[1]   # the brick with an empty pixel on the left and right, so there is a gap
         @red_wall = @tileset[7]
         @yellow_dot = @tileset[18]
@@ -203,8 +225,8 @@ class ScrollerDisplay < Widget
         @red_wall_ne = @diagonal_tileset[10]
     end
 
-
-
+    #                                                                      CREATE_BOARD
+    #
     # Takes an array of strings that represents the board
     def create_board(map_array)         
         @grid.clear_tiles
@@ -299,7 +321,20 @@ class ScrollerDisplay < Widget
         end
     end 
 
-
+    def bounce_off_player(proposed_next_x, proposed_next_y)
+        in_radians = @ball.direction
+        cx = @ball.center_x 
+        scale_length = @player.width + @ball.width
+        impact_on_scale = ((@player.right_edge + (@ball.width / 2)) - cx) + 0.25
+        pct = impact_on_scale.to_f / scale_length.to_f
+        @ball.direction = 0.15 + (pct * (Math::PI - 0.3.to_f))
+        #info("Scale length: #{scale_length}  Impact on Scale: #{impact_on_scale.round}  Pct: #{pct.round(2)}  rad: #{@ball.direction.round(2)}  speed: #{@ball.speed}")
+        #info("#{impact_on_scale.round}/#{scale_length}:  #{pct.round(2)}%")
+        @ball.last_element_bounce = @player.object_id
+        # if @progress_bar.is_done
+        #     @update_fire_after_next_player_hit = true 
+        # end
+    end
 
 
 

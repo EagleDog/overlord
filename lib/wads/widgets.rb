@@ -20,9 +20,11 @@ require_relative 'widgets/layouts'
 module Wads
 
     # __Coordinates__
-    # An instance of Coordinates references an x, y position on the screen
-    # as well as the width and height of the widget, thus providing the
-    # outer dimensions of a rectangular widget.
+    # An instance of Coordinates references
+    # an x, y position on the screen, as well
+    # as the width and height of the widget,
+    # thus providing the outer dimensions of
+    # a rectangular widget.
     #
     class Coordinates 
         attr_accessor :x
@@ -38,10 +40,15 @@ module Wads
     end
 
     # __GuiContainer__
-    # A Gui container is used to allocate space in the x, y two dimensional space to widgets
-    # and keep track of where the next widget in the container will be placed.
-    # The fill type is one of FILL_VERTICAL_STACK, FILL_HORIZONTAL_STACK, or FILL_FULL_SIZE.
-    # Layouts used containers to allocate space across the entire visible application.
+    # A Gui container is used to allocate space
+    # in the x, y two dimensional space to widgets
+    # and keep track of where the next widget in
+    # the container will be placed.
+    #
+    # The fill type is one of FILL_VERTICAL_STACK,
+    # FILL_HORIZONTAL_STACK, or FILL_FULL_SIZE.
+    # Layouts used containers to allocate space
+    # across the entire visible application.
     #
     class GuiContainer 
         attr_accessor :start_x
@@ -166,31 +173,56 @@ module Wads
     end
 
     # __Widget__
-    # The base class for all widgets. This class provides basic functionality for
-    # all gui widgets including maintaining the coordinates and layout used.
-    # A widget has a border and background, whose colors are defined by the theme.
-    # These can be turned off using the disable_border and disable_background methods.
-    # Widgets support a hierarchy of visible elements on the screen. For example,
-    # a parent widget may be a form, and it may contain many child widgets such as
-    # text labels, input fields, and a submit button. You can add children to a 
-    # widget using the add or add_child methods. Children are automatically rendered
-    # so any child does not need an explicit call to its draw or render method.
-    # Children can be placed with x, y positioning relative to their parent for convenience
+    # The base class for all widgets. This
+    # class provides basic functionality for
+    # all gui widgets including maintaining the
+    # coordinates and layout used.
+    #
+    # A widget has a border and background,
+    # whose colors are defined by the theme.
+    # These can be turned off using the
+    # `disable_border` and `disable_background`
+    # methods.
+    #
+    # Widgets support a hierarchy of visible
+    # elements on the screen. For example,
+    # a parent widget may be a form, and it
+    # may contain many child widgets such as
+    # text labels, input fields, and a submit
+    # button. You can add children to a 
+    # widget using the add or `add_child` methods.
+    #
+    # Children are automatically rendered,
+    # so any child does not need an explicit
+    # call to its `draw` or `render` method.
+    # Children can be placed with x, y positioning
+    # relative to their parent for convenience
     # (see the relative_x and relative_y methods).
     #
-    # The draw and update methods are used by their Gosu counterparts.
-    # Typically there is one parent Wads widget used by a Gosu app, and it controls
-    # drawing all of the child widgets, invoking update on all widgets, and delegating
-    # user events. Widgets can override a render method for any specific drawing logic.
-    # It is worth showing the draw method here to amplify the point. You do not need
-    # to specifically call draw or render on any children. If you want to manage GUI
-    # elements outside of the widget hierarchy, then render is the best place to do it.
+    # The draw and update methods are used
+    # by their Gosu counterparts.
+    # Typically there is one parent Wads widget
+    # used by a Gosu app, and it controls
+    # drawing all of the child widgets, invoking
+    # update on all widgets, and delegating
+    # user events. Widgets can override a render
+    # method for any specific drawing logic.
     #
-    # Likewise, the update method recursively calls the handle_update method on all
+    # It is worth showing the draw method here
+    # to amplify the point. You do not need
+    # to specifically call draw or render on
+    # any children. If you want to manage GUI
+    # elements outside of the widget hierarchy,
+    # then render is the best place to do it.
+    #
+    # Likewise, the `update` method recursively
+    # calls the `handle_update` method on all
     # children in this widget's hierarchy.
     #
-    # A commonly used method is contains_click(mouse_x, mouse_y) which returns
-    # whether this widget contained the mouse event. For a example, a button widget
+    # A commonly used method is
+    # `contains_click(mouse_x, mouse_y)`
+    # which returns whether this widget contained
+    # the mouse event. For a example, a button widget
     # uses this method to determine if it was clicked.
     # 
     class Widget 
@@ -467,10 +499,14 @@ module Wads
         end 
 
         #
-        # Move this widget to an absolute x, y position on the screen. 
-        # It will automatically move all child widgets, however be warned that
-        # if you are manually rendering any elements within your own render
-        # logic, you will need to deal with that seperately as the base class
+        # Move this widget to an absolute
+        # x, y position on the screen.
+        # It will automatically move all
+        # child widgets, however be warned
+        # that if you are manually rendering
+        # any elements within your own render
+        # logic, you will need to deal with
+        # that seperately as the base class
         # does not have access to its coordinates.
         #
         def move_recursive_absolute(new_x, new_y)
@@ -480,11 +516,15 @@ module Wads
         end
 
         #
-        # Move this widget to a relative number of x, y pixels on the screen. 
-        # It will automatically move all child widgets, however be warned that
-        # if you are manually rendering any elements within your own render
-        # logic, you will need to deal with that seperately as the base class
-        # does not have access to its coordinates.
+        # Move this widget to a relative number
+        # of x, y pixels on the screen.
+        # It will automatically move all child
+        # widgets, however be warned that if
+        # you are manually rendering any elements
+        # within your own render logic, you will
+        # need to deal with that seperately as
+        # the base class does not have access to
+        # its coordinates.
         #
         def move_recursive_delta(delta_x, delta_y)
             @x = @x + delta_x
@@ -495,14 +535,21 @@ module Wads
         end
 
         #
-        # The primary draw method, used by the main Gosu loop draw method.
-        # A common usage pattern is to have a primary widget in your Gosu app
-        # that calls this draw method. All children of this widget are then
-        # automatically drawn by this method recursively.
-        # Note that as a widget author, you should only implement/override the
-        # render method. This is a framework implementation that will
-        # handle child rendering and invoke render as a user-implemented
-        # callback.
+        # The primary draw method, used by
+        # the main Gosu loop draw method.
+        # A common usage pattern is to have
+        # a primary widget in your Gosu app
+        # that calls this draw method. All
+        # children of this widget are then
+        # automatically drawn by this method
+        # recursively.
+        #
+        # Note that as a widget author, you
+        # should only implement/override the
+        # render method. This is a framework
+        # implementation that will handle
+        # child rendering and invoke render
+        # as a user-implemented callback.
         #
         def draw 
             if @visible 
@@ -547,9 +594,16 @@ module Wads
         end
 
         #
-        # Return true if any part of the given widget overlaps on the screen with this widget
-        # as defined by the rectangle from the upper left corner to the bottom right.
-        # Note that your widget may not necessariliy draw pixels in this entire space.
+        # Return true if any part of
+        # the given widget overlaps
+        # on the screen with this widget
+        # as defined by the rectangle
+        # from the upper left corner to
+        # the bottom right.
+        #
+        # Note that your widget may not
+        # necessariliy draw pixels in
+        # this entire space.
         #
         def overlaps_with(other_widget)
             if other_widget.contains_click(@x, @y)
@@ -571,10 +625,15 @@ module Wads
         end
 
         #
-        # The framework implementation of the main Gosu update loop. This method
-        # propagates the event to all child widgets as well.
+        # The framework implementation of the main
+        # Gosu update loop. This method propagates
+        # the event to all child widgets as well.
+        #
         # As a widget author, do not override this method.
-        # Your callback to implement is the handle_update(update_count, mouse_x, mouse_y) method.
+        #
+        # Your callback to implement is the
+        # `handle_update(update_count, mouse_x, mouse_y)`
+        # method.
         #
         def update(update_count, mouse_x, mouse_y)
             if @overlay_widget 
@@ -587,9 +646,14 @@ module Wads
         end
 
         #
-        # The framework implementation of the main Gosu button down method.
-        # This method separates out mouse events from keyboard events, and calls the appropriate
-        # callback. As a widget author, do not override this method.
+        # The framework implementation of
+        # the main Gosu button down method.
+        # This method separates out mouse
+        # events from keyboard events, and
+        # calls the appropriate callback.
+        #
+        # As a widget author, do not override this method.
+        #
         # Your callbacks to implement are:
         #   handle_mouse_down(mouse_x, mouse_y)
         #   handle_right_mouse(mouse_x, mouse_y)
@@ -650,10 +714,15 @@ module Wads
         end
 
         #
-        # The framework implementation of the main Gosu button up method.
-        # This method separates out mouse events from keyboard events.
-        # Only the mouse up event is propagated through the child hierarchy.
+        # The framework implementation of
+        # the main Gosu button up method.
+        # This method separates out mouse
+        # events from keyboard events.
+        # Only the mouse up event is
+        # propagated through the child hierarchy.
+        #
         # As a widget author, do not override this method.
+        #
         # Your callback to implement is:
         #   handle_mouse_up(mouse_x, mouse_y)
         #
@@ -692,8 +761,9 @@ module Wads
         end
 
         #
-        # Return the absolute x coordinate given the relative x pixel to this widget
-        #
+        # Return the absolute x coordinate,
+        # given the relative x pixel to this
+        # widget.
         def relative_x(x)
             x_pixel_to_screen(x)
         end 
@@ -704,8 +774,9 @@ module Wads
         end
 
         #
-        # Return the absolute y coordinate given the relative y pixel to this widget
-        #
+        # Return the absolute y coordinate,
+        # given the relative y pixel to this
+        # widget.
         def relative_y(y)
             y_pixel_to_screen(y)
         end 
@@ -716,8 +787,8 @@ module Wads
         end
 
         #
-        # Add a child text widget using x, y positioning relative to this widget
-        #
+        # Add a child text widget, using x, y
+        # positioning, relative to this widget
         def add_text(message, rel_x, rel_y, color = nil, use_large_font = false)
             new_text = Text.new(x_pixel_to_screen(rel_x), y_pixel_to_screen(rel_y), message,
                                                   { ARG_COLOR => color, ARG_USE_LARGE_FONT => use_large_font})
@@ -728,8 +799,8 @@ module Wads
         end 
 
         #
-        # Add a child document widget using x, y positioning relative to this widget
-        #
+        # Add a child document widget, using
+        # x, y positioning relative to this widget
         def add_document(content, rel_x, rel_y, width, height)
             new_doc = Document.new(x_pixel_to_screen(rel_x), y_pixel_to_screen(rel_y),
                                    width, height,
@@ -741,10 +812,14 @@ module Wads
         end
 
         #
-        # Add a child button widget using x, y positioning relative to this widget.
-        # The width of the button will be determined based on the label text unless
-        # specified in the optional parameter. The code to execute is provided as a
-        # block, as shown in the example below.
+        # Add a child button widget using x, y
+        # positioning relative to this widget.
+        # The width of the button will be
+        # determined based on the label text,
+        # unless specified in the optional
+        # parameter. The code to execute is
+        # provided as a block, as shown in the
+        # example below.
         #   add_button("Test Button", 10, 10) do 
         #     puts "User hit the test button"
         #   end
@@ -763,9 +838,11 @@ module Wads
         end
 
         #
-        # Add a child delete button widget using x, y positioning relative to this widget.
-        # A delete button is a regular button that is rendered as a red X, instead of a text label.
-        #
+        # Add a child delete button widget, using
+        # x, y positioning relative to this widget.
+        # A delete button is a regular button that
+        # is rendered as a red X, instead of a text
+        # label.
         def add_delete_button(rel_x, rel_y, &block)
             new_delete_button = DeleteButton.new(x_pixel_to_screen(rel_x), y_pixel_to_screen(rel_y))
             new_delete_button.set_action(&block)
@@ -776,8 +853,8 @@ module Wads
         end
 
         #
-        # Add a child table widget using x, y positioning relative to this widget.
-        # 
+        # Add a child table widget, using x, y
+        # positioning relative to this widget.
         def add_table(rel_x, rel_y, width, height, column_headers, max_visible_rows = 10)
             new_table = Table.new(x_pixel_to_screen(rel_x), y_pixel_to_screen(rel_y),
                               width, height, column_headers, max_visible_rows)
@@ -788,9 +865,10 @@ module Wads
         end 
 
         #
-        # Add a child table widget using x, y positioning relative to this widget.
-        # The user can select up to one and only one item in the table.
-        # 
+        # Add a child table widget using x, y
+        # positioning relative to this widget.
+        # The user can select up to one and
+        # only one item in the table.
         def add_single_select_table(rel_x, rel_y, width, height, column_headers, max_visible_rows = 10)
             new_table = SingleSelectTable.new(x_pixel_to_screen(rel_x), y_pixel_to_screen(rel_y),
                               width, height, column_headers, max_visible_rows)
@@ -801,7 +879,8 @@ module Wads
         end 
 
         #
-        # Add a child table widget using x, y positioning relative to this widget.
+        # Add a child table widget using x, y
+        # positioning relative to this widget.
         # The user can zero to many items in the table.
         # 
         def add_multi_select_table(rel_x, rel_y, width, height, column_headers, max_visible_rows = 10)
@@ -857,7 +936,9 @@ module Wads
         end
 
         #
-        # Add an overlay widget that is drawn on top of (at a higher z level) this widget
+        # Add an overlay widget that is drawn
+        # on top of (at a higher z level) this
+        # widget.
         #
         def add_overlay(overlay)
             overlay.base_z = @base_z + 10
@@ -865,8 +946,8 @@ module Wads
             @overlay_widget = overlay
         end
 
-        # For all child widgets, adjust the x coordinate
-        # so that they are centered.
+        # For all child widgets, adjust the
+        # x coordinate so that they are centered.
         def center_children
             if @children.empty?
                 return 
@@ -886,7 +967,8 @@ module Wads
         end
 
         #
-        # Override this method in your subclass to process mouse down events.
+        # Override this method in your
+        # subclass to process mouse down events.
         # The base implementation is empty
         #
         def handle_mouse_down mouse_x, mouse_y
@@ -894,7 +976,8 @@ module Wads
         end
 
         #
-        # Override this method in your subclass to process mouse up events.
+        # Override this method in your
+        # subclass to process mouse up events.
         # The base implementation is empty
         #
         def handle_mouse_up mouse_x, mouse_y
@@ -902,8 +985,12 @@ module Wads
         end
 
         #
-        # Override this method in your subclass to process the right mouse click event.
-        # Note we do not differentiate between up and down for the right mouse button.
+        # Override this method in your
+        # subclass to process the right
+        # mouse click event.
+        # Note we do not differentiate
+        # between up and down for the
+        # right mouse button.
         # The base implementation is empty
         #
         def handle_right_mouse mouse_x, mouse_y
@@ -911,7 +998,8 @@ module Wads
         end
 
         #
-        # Override this method in your subclass to process keyboard events.
+        # Override this method in your
+        # subclass to process keyboard events.
         # The base implementation is empty.
         # Note that the mouse was not necessarily positioned over this widget.
         # You can check this using the contains_click(mouse_x, mouse_y) method
