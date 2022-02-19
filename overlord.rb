@@ -8,7 +8,7 @@ include RdiaGames
 
 require_relative 'bin/pathfinder'
 require_relative 'objects'
-require_relative 'display'
+require_relative 'scroller'
 require_relative 'characters'
 require_relative 'items'
 require_relative 'themes'
@@ -27,7 +27,7 @@ MEDIA_PATH = File.join(File.dirname(File.dirname(__FILE__)), 'overlord/media/')
 
 class Overlord < RdiaGame
     def initialize
-        super(GAME_WIDTH, GAME_HEIGHT, "Overlord", ScrollerDisplay.new) #OverDisplay.new)
+        super(GAME_WIDTH, GAME_HEIGHT, "Overlord", Scroller.new) #OverDisplay.new)
         key_bindings
 #        setup
     end 
@@ -73,7 +73,7 @@ class CodeBase
     end
 end
 ###
-###
+### REFERENCE ###
 ###
 class WattsApp < Gosu::Window
     def initialize(width, height, caption, widget)

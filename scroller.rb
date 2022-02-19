@@ -1,5 +1,12 @@
+#
+#    SCROLLER    SCROLLER    SCROLLER    SCROLLER
+#
+#         Main Game Logic for Overlord
+#
 
-class ScrollerDisplay < Widget
+require_relative 'worldmap'
+
+class Scroller < Widget
     def initialize
         super(0, 0, GAME_WIDTH, GAME_HEIGHT)
         set_layout(LAYOUT_HEADER_CONTENT)
@@ -12,31 +19,53 @@ class ScrollerDisplay < Widget
         @camera_x = 0
         @camera_y = 0
 
-#        @left, @right, @up, @down = ''
+        # @left, @right, @up, @down = ''
+        # TODO put this back when we are ready 
+        # to release, instructions to the user
+        # add_overlay(create_overlay_widget)
 
-        # TODO put this back when we are ready to release, instructions to the user
-        #add_overlay(create_overlay_widget)
+        # initialize
+
+
+
+
+        @grid = GridDisplay.new(0, 0, 16, 50, 38, {ARG_SCALE => 2})
+        @worldmap = WorldMap.new(@grid)
 
         load_panels
-        load_tiles
-        load_objects
+
+        @worldmap.load_tiles
+
+        load_player
+        load_ball
+
+        load_map
+
     end 
 
-    def load_objects
+    def load_player                          # LOAD_PLAYER
         @player = Character.new
         @player.set_absolute_position(500, 150)
         add_child(@player)
+    end
 
+    def load_ball                             # LOAD_BALL
         @ball = Ballrag.new
         add_child(@ball)
-
-        @grid = GridDisplay.new(0, 0, 16, 50, 38, {ARG_SCALE => 2})
-        create_board(File.readlines("maps/maps/aboard1.txt"))
-        add_child(@grid)
     end
 
 
-    def draw 
+    def load_map                              # LOAD_MAP
+
+
+        @worldmap.create_board(File.readlines("maps/maps/aboard1.txt"))
+
+        add_child(@grid)
+
+    end
+
+
+    def draw                       #  DRAW   DRAW   DRAW   DRAW
         if @show_border
             draw_border
         end
@@ -55,6 +84,7 @@ class ScrollerDisplay < Widget
         end
     end 
 
+    #   HANDLE_UPDATE              HANDLE_UPDATE   HANDLE_UPDATE
     def handle_update update_count, mouse_x, mouse_y
         ball_logic
         # Scrolling follows player
@@ -67,7 +97,7 @@ class ScrollerDisplay < Widget
         interact_with_widgets(children)
     end
 
-    def ball_logic
+    def ball_logic              #  BALL_LOGIC   BALL_LOGIC  BALL_LOGIC
         proposed_next_x, proposed_next_y = @ball.proposed_move
         widgets_at_proposed_spot = @grid.proposed_widget_at(@ball, proposed_next_x, proposed_next_y)
         if widgets_at_proposed_spot.empty?
@@ -87,7 +117,7 @@ class ScrollerDisplay < Widget
 
 
 
-    def interact_with_widgets(widgets)
+    def interact_with_widgets(widgets)      #  INTERACT     INTERACT
         if widgets.size == 1
             w = widgets[0]
             if w.object_id == @ball.last_element_bounce
@@ -148,14 +178,14 @@ class ScrollerDisplay < Widget
         true
     end
 
-    def action_map id
+    def action_map(id)
         return 'left' if id == Gosu::KbA or id == Gosu::KbLeft
         return 'right' if id == Gosu::KbD or id == Gosu::KbRight
         return 'up' if id == Gosu::KbW or id == Gosu::KbUp
         return 'down' if id == Gosu::KbS or id == Gosu::KbDown
     end
 
-    def handle_key_held_down id, mouse_x, mouse_y
+    def handle_key_held_down(id, mouse_x, mouse_y)
         @player.move_left(@grid) if action_map(id) == 'left'
         @player.move_right(@grid) if action_map(id) == 'right'
         @player.move_up(@grid) if action_map(id) == 'up'
@@ -163,21 +193,21 @@ class ScrollerDisplay < Widget
         #puts "#{@player.x}, #{@player.y}    Camera: #{@camera_x}, #{@camera_y}   Tile: #{@grid.tile_at_absolute(@player.x, @player.y)}"
     end
 
-    def handle_key_press id, mouse_x, mouse_y
+    def handle_key_press(id, mouse_x, mouse_y)
         @player.start_move_left if action_map(id) == 'left'
         @player.start_move_right if action_map(id) == 'right'
         @player.start_move_up if action_map(id) == 'up'
         @player.start_move_down if action_map(id) == 'down'
     end
 
-    def handle_key_up id, mouse_x, mouse_y
+    def handle_key_up(id, mouse_x, mouse_y)
         if id == Gosu::KbA or id == Gosu::KbD or id == Gosu::KbW or id == Gosu::KbS or
            id == Gosu::KbLeft or id == Gosu::KbRight or id == Gosu::KbUp or id == Gosu::KbDown
             @player.stop_move
         end
     end
 
-    def intercept_widget_event(result)
+    def intercept_widget_event(result)          #  INTERCEPT    INTERCEPT
         info("We intercepted the event #{result.inspect}")
         info("The overlay widget is #{@overlay_widget}")
         if result.close_widget 
@@ -192,7 +222,7 @@ class ScrollerDisplay < Widget
     end
 
 
-    def load_panels
+    def load_panels                     #  LOAD_PANELS    LOAD_PANELS
         header_panel = add_panel(SECTION_NORTH)
         header_panel.get_layout.add_text("Test Scroller",
                                          { ARG_TEXT_ALIGN => TEXT_ALIGN_CENTER,
@@ -210,63 +240,7 @@ class ScrollerDisplay < Widget
                                                      {ARG_TEXT_ALIGN => TEXT_ALIGN_RIGHT})
     end
 
-    def load_tiles      #                                                                   LOAD_TILES
-        @tileset = Gosu::Image.load_tiles(MEDIA_PATH + 
-                    "basictiles.png", 16, 16, tileable: true)
-        @blue_brick = @tileset[1]   # the brick with an empty pixel on the left and right, so there is a gap
-        @red_wall = @tileset[7]
-        @yellow_dot = @tileset[18]
-        @green_dot = @tileset[19]
-        @fire_transition_tile = @tileset[66]
-        @diagonal_tileset = Gosu::Image.load_tiles(MEDIA_PATH + "diagonaltiles.png", 16, 16, tileable: true)
-        @red_wall_se = @diagonal_tileset[0]
-        @red_wall_sw = @diagonal_tileset[7]
-        @red_wall_nw = @diagonal_tileset[13]
-        @red_wall_ne = @diagonal_tileset[10]
-    end
 
-    #                                                                      CREATE_BOARD
-    #
-    # Takes an array of strings that represents the board
-    def create_board(map_array)         
-        @grid.clear_tiles
-        grid_y = 0
-        grid_x = 0
-        map_array.each do |line|
-            index = 0
-            while index < line.size
-                char = line[index..index+1].strip
-                #puts "[#{index}  #{grid_x},#{grid_y} = #{char}."
-                img = nil
-
-                # If the token is a number, use it as the tile index
-                if char.match?(/[[:digit:]]/)
-                    tile_index = char.to_i
-                    #puts "Using index #{tile_index}."
-                    # This is temporary, we need a way to define and store metadata for tiles
-                    img = Wall.new(@tileset[tile_index]) if tile_index == 5
-                    img = BackgroundArea.new(@tileset[tile_index]) if tile_index != 5
-                else
-                    img = Brick.new(@blue_brick) if char == "B"
-                    img = Wall.new(@blue_brick) if char == "W"
-                    img = Dot.new(@yellow_dot) if char == "Y"
-                    img = Dot.new(@green_dot) if char == "G"
-                    img = OutOfBounds.new(@fire_transition_tile) if char == "F"
-                end
-                
-                if img.nil?
-                    # nothing to do
-                else
-                    @grid.set_tile(grid_x, grid_y, img)
-                end
-
-                grid_x = grid_x + 1
-                index = index + 2
-            end
-            grid_x = 0
-            grid_y = grid_y + 1
-        end
-    end 
 
 ######                                  ########
 ######   BOUNCE     BOUNCE   BOUNCE     ########
