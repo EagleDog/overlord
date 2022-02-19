@@ -1,3 +1,7 @@
+#
+#  tiles.rb
+#
+#
 
 class Wall < GameObject
     def initialize(image)

@@ -10,7 +10,7 @@ require_relative 'bin/pathfinder'
 require_relative 'objects'
 require_relative 'scroller'
 require_relative 'characters'
-require_relative 'items'
+require_relative 'tiles'
 require_relative 'themes'
 
 GAME_WIDTH = 1200
