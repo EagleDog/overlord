@@ -6,11 +6,15 @@
 class Block < GameObject
     def initialize(image)
         super(image)
-        @can_move = true
+        @can_move = false
     end
 
     def interaction_results
         [RDIA_REACT_BOUNCE, RDIA_REACT_CONSUME, RDIA_REACT_SCORE]
+    end
+
+    def score 
+        10 
     end
 
 end

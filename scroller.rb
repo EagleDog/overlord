@@ -36,12 +36,12 @@ class Scroller < Widget
         load_player
         load_ball
 
-        load_map
+        load_map  # LOAD MAP
     end 
 
     def load_panels                     #  LOAD_PANELS    LOAD_PANELS
         header_panel = add_panel(SECTION_NORTH)
-        header_panel.get_layout.add_text("Test Scroller",
+        header_panel.get_layout.add_text("OVERLORD",
                                          { ARG_TEXT_ALIGN => TEXT_ALIGN_CENTER,
                                            ARG_USE_LARGE_FONT => true})
         subheader_panel = header_panel.get_layout.add_vertical_panel({ARG_LAYOUT => LAYOUT_EAST_WEST,
@@ -71,11 +71,11 @@ class Scroller < Widget
     end
 
 
-    def load_map                              # LOAD_MAP
+    def load_map    # LOAD MAP                   # LOAD_MAP  __________________
 
-        @worldmap.create_board(File.readlines("maps/maps/aboard1.txt"))
+        @worldmap.create_board(File.readlines("maps/maps/a1.txt"))
 
-        add_child(@grid)
+        add_child(@grid)                    #              ____________________
     end
 
 
