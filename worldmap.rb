@@ -7,8 +7,7 @@ class WorldMap
 
     def load_tiles      #     LOAD_TILES     LOAD_TILES     LOAD_TILES
         @tileset = Gosu::Image.load_tiles(
-            MEDIA_PATH + 
-            "basictiles.png", 
+            "media/basictiles.png", 
             16, 16, 
             tileable: true)
         @blue_brick = @tileset[1]   # the brick with an empty pixel on the left and right, so there is a gap
@@ -17,8 +16,10 @@ class WorldMap
         @green_dot = @tileset[19]
         @fire_transition_tile = @tileset[66]
         @diagonal_tileset = 
-            Gosu::Image.load_tiles(MEDIA_PATH + 
-            "diagonaltiles.png", 16, 16, tileable: true)
+            Gosu::Image.load_tiles( 
+            "media/diagonaltiles.png", 
+            16, 16, 
+            tileable: true)
         @red_wall_se = @diagonal_tileset[0]
         @red_wall_sw = @diagonal_tileset[7]
         @red_wall_nw = @diagonal_tileset[13]

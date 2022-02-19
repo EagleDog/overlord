@@ -4,7 +4,11 @@ class Character < GameObject
     def initialize(args = {})
         @animation_count = 1
         @direction = DIRECTION_TOWARDS
-        @character_tileset = Gosu::Image.load_tiles(MEDIA_PATH + "characters.png", 16, 16, tileable: true)
+        @character_tileset =
+          Gosu::Image.load_tiles(
+            "media/characters.png", 
+            16, 16, 
+            tileable: true)
         @img_towards = [@character_tileset[3], @character_tileset[4], @character_tileset[5]]
         @img_left = [@character_tileset[15], @character_tileset[16], @character_tileset[17]]
         @img_right = [@character_tileset[27], @character_tileset[28], @character_tileset[29]]
