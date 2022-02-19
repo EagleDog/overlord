@@ -5,6 +5,7 @@
 #
 
 require_relative 'worldmap'
+require_relative 'bindings'
 
 class Scroller < Widget
     def initialize
@@ -19,15 +20,11 @@ class Scroller < Widget
         @camera_x = 0
         @camera_y = 0
 
-        # @left, @right, @up, @down = ''
         # TODO put this back when we are ready 
         # to release, instructions to the user
         # add_overlay(create_overlay_widget)
 
         # initialize
-
-
-
 
         @grid = GridDisplay.new(0, 0, 16, 50, 38, {ARG_SCALE => 2})
         @worldmap = WorldMap.new(@grid)
@@ -40,8 +37,27 @@ class Scroller < Widget
         load_ball
 
         load_map
-
     end 
+
+    def load_panels                     #  LOAD_PANELS    LOAD_PANELS
+        header_panel = add_panel(SECTION_NORTH)
+        header_panel.get_layout.add_text("Test Scroller",
+                                         { ARG_TEXT_ALIGN => TEXT_ALIGN_CENTER,
+                                           ARG_USE_LARGE_FONT => true})
+        subheader_panel = header_panel.get_layout.add_vertical_panel({ARG_LAYOUT => LAYOUT_EAST_WEST,
+                                                                      ARG_DESIRED_WIDTH => GAME_WIDTH})
+        subheader_panel.disable_border
+        west_panel = subheader_panel.add_panel(SECTION_WEST)
+        west_panel.get_layout.add_text("Score")
+        @score_text = west_panel.get_layout.add_text("#{@score}")
+        
+        east_panel = subheader_panel.add_panel(SECTION_EAST)
+        east_panel.get_layout.add_text("Level", {ARG_TEXT_ALIGN => TEXT_ALIGN_RIGHT})
+        @level_text = east_panel.get_layout.add_text("#{@level}",
+                                                     {ARG_TEXT_ALIGN => TEXT_ALIGN_RIGHT})
+    end
+
+
 
     def load_player                          # LOAD_PLAYER
         @player = Character.new
@@ -57,12 +73,46 @@ class Scroller < Widget
 
     def load_map                              # LOAD_MAP
 
-
         @worldmap.create_board(File.readlines("maps/maps/aboard1.txt"))
 
         add_child(@grid)
-
     end
+
+
+
+    #   HANDLE_UPDATE              HANDLE_UPDATE   HANDLE_UPDATE
+    def handle_update update_count, mouse_x, mouse_y
+        ball_logic
+        # Scrolling follows player
+        # @camera_x = [[@cptn.x - WIDTH / 2, 0].max, @map.width * 50 - WIDTH].min
+        # @camera_y = [[@cptn.y - HEIGHT / 2, 0].max, @map.height * 50 - HEIGHT].min 
+        @camera_x = [[@player.x - (GAME_WIDTH.to_f / 2), 0].max, @grid.grid_width * 32 - GAME_WIDTH].min
+        @camera_y = [[@player.y - (GAME_HEIGHT.to_f / 2), 0].max, @grid.grid_height * 32 - GAME_HEIGHT].min
+        #puts "#{@player.x}, #{@player.y}    Camera: #{@camera_x}, #{@camera_y}"
+
+        interact_with_widgets(children)
+    end
+
+
+    def ball_logic              #  BALL_LOGIC   BALL_LOGIC  BALL_LOGIC
+        proposed_next_x, proposed_next_y = @ball.proposed_move
+        widgets_at_proposed_spot = @grid.proposed_widget_at(@ball, proposed_next_x, proposed_next_y)
+        if widgets_at_proposed_spot.empty?
+            if @ball.overlaps_with_proposed(proposed_next_x, proposed_next_y, @player)
+                #info("We hit the player!")
+                bounce_off_player(proposed_next_x, proposed_next_y)
+            else
+                @ball.set_absolute_position(proposed_next_x, proposed_next_y)
+            end
+        else 
+            #info("Found candidate widgets to interact")
+            if interact_with_widgets(widgets_at_proposed_spot) #, update_count)
+                @ball.set_absolute_position(proposed_next_x, proposed_next_y) 
+            end
+        end
+    end
+
+
 
 
     def draw                       #  DRAW   DRAW   DRAW   DRAW
@@ -84,36 +134,6 @@ class Scroller < Widget
         end
     end 
 
-    #   HANDLE_UPDATE              HANDLE_UPDATE   HANDLE_UPDATE
-    def handle_update update_count, mouse_x, mouse_y
-        ball_logic
-        # Scrolling follows player
-        # @camera_x = [[@cptn.x - WIDTH / 2, 0].max, @map.width * 50 - WIDTH].min
-        # @camera_y = [[@cptn.y - HEIGHT / 2, 0].max, @map.height * 50 - HEIGHT].min 
-        @camera_x = [[@player.x - (GAME_WIDTH.to_f / 2), 0].max, @grid.grid_width * 32 - GAME_WIDTH].min
-        @camera_y = [[@player.y - (GAME_HEIGHT.to_f / 2), 0].max, @grid.grid_height * 32 - GAME_HEIGHT].min
-        #puts "#{@player.x}, #{@player.y}    Camera: #{@camera_x}, #{@camera_y}"
-
-        interact_with_widgets(children)
-    end
-
-    def ball_logic              #  BALL_LOGIC   BALL_LOGIC  BALL_LOGIC
-        proposed_next_x, proposed_next_y = @ball.proposed_move
-        widgets_at_proposed_spot = @grid.proposed_widget_at(@ball, proposed_next_x, proposed_next_y)
-        if widgets_at_proposed_spot.empty?
-            if @ball.overlaps_with_proposed(proposed_next_x, proposed_next_y, @player)
-                #info("We hit the player!")
-                bounce_off_player(proposed_next_x, proposed_next_y)
-            else
-                @ball.set_absolute_position(proposed_next_x, proposed_next_y)
-            end
-        else 
-            #info("Found candidate widgets to interact")
-            if interact_with_widgets(widgets_at_proposed_spot) #, update_count)
-                @ball.set_absolute_position(proposed_next_x, proposed_next_y) 
-            end
-        end
-    end
 
 
 
@@ -222,23 +242,6 @@ class Scroller < Widget
     end
 
 
-    def load_panels                     #  LOAD_PANELS    LOAD_PANELS
-        header_panel = add_panel(SECTION_NORTH)
-        header_panel.get_layout.add_text("Test Scroller",
-                                         { ARG_TEXT_ALIGN => TEXT_ALIGN_CENTER,
-                                           ARG_USE_LARGE_FONT => true})
-        subheader_panel = header_panel.get_layout.add_vertical_panel({ARG_LAYOUT => LAYOUT_EAST_WEST,
-                                                                      ARG_DESIRED_WIDTH => GAME_WIDTH})
-        subheader_panel.disable_border
-        west_panel = subheader_panel.add_panel(SECTION_WEST)
-        west_panel.get_layout.add_text("Score")
-        @score_text = west_panel.get_layout.add_text("#{@score}")
-        
-        east_panel = subheader_panel.add_panel(SECTION_EAST)
-        east_panel.get_layout.add_text("Level", {ARG_TEXT_ALIGN => TEXT_ALIGN_RIGHT})
-        @level_text = east_panel.get_layout.add_text("#{@level}",
-                                                     {ARG_TEXT_ALIGN => TEXT_ALIGN_RIGHT})
-    end
 
 
 

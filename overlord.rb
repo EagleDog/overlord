@@ -13,7 +13,7 @@ require_relative 'characters'
 require_relative 'items'
 require_relative 'themes'
 
-GAME_WIDTH = 800
+GAME_WIDTH = 1200
 GAME_HEIGHT = 700
 GAME_START_X = 10
 GAME_START_Y = 10
