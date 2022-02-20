@@ -23,12 +23,12 @@ class WorldMap
     def assign_numbers              # ASSIGN_NUMBERS
         @blue_brick = @tileset[1]   # the brick with an empty pixel on the left and right, so there is a gap
 
-        @block1 = @tileset[7]
-        @b2 = @tileset[8]
-        @b3 = @tileset[9]
-        @b4 = @tileset[10]
-        @b5 = @tileset[11]
-        @b6 = @tileset[12]
+        @block1 = @tileset[50]
+        @b2 = @tileset[51]
+        @b3 = @tileset[52]
+        @b4 = @tileset[53]
+        @b5 = @tileset[54]
+        @b6 = @tileset[55]
 
         @red_wall = @tileset[7]
         @yellow_dot = @tileset[18]

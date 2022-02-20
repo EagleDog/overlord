@@ -30,8 +30,17 @@ class Overlord < RdiaGame
         super(GAME_WIDTH, GAME_HEIGHT, "Overlord", Scroller.new) #OverDisplay.new)
         key_bindings
 #        setup
+        play_music
+
     end 
-    
+
+    def play_music
+#        self.load_sound(window)
+        @music = Gosu::Song.new('media/adventure.ogg')
+        @music.play
+    end
+
+
     # def setup
     #     @pathfinder = Pathfinder.new
     #     @pathfinder.setup
