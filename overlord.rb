@@ -37,7 +37,7 @@ class Overlord < RdiaGame
     def play_music
 #        self.load_sound(window)
         @music = Gosu::Song.new('media/adventure.ogg')
-        @music.play
+        @music.play(true)
     end
 
 
