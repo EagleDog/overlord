@@ -7,6 +7,7 @@ include Wads
 include RdiaGames
 
 require_relative 'bin/pathfinder'
+require_relative 'ball_object'
 require_relative 'objects'
 require_relative 'scroller'
 require_relative 'characters'
@@ -37,6 +38,7 @@ class Overlord < RdiaGame
     def play_music
 #        self.load_sound(window)
         @music = Gosu::Song.new('media/adventure.ogg')
+        @music.volume = 0.2
         @music.play(true)
     end
 
@@ -95,9 +97,11 @@ class WattsApp < Gosu::Window
         @registered_hold_down_buttons = []
     end 
 
-    #
-    # This method must be invoked with any Wads::Widget instance. It then handles
-    # delegating all events and drawing all child widgets.
+    # __set_display(widget)
+    # This method must be invoked with any 
+    # Wads::Widget instance. It then handles
+    # delegating all events and drawing all 
+    # child widgets.
     #
     def set_display(widget) 
         @main_widget = widget 

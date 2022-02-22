@@ -87,7 +87,7 @@ module RdiaGames
             row[tile_y]
         end 
 
-        def set_tile(tile_x, tile_y, widget)
+        def set_tile(tile_x, tile_y, tilepiece)
             adjusted_tile_x = tile_x + @grid_x_offset
             adjusted_tile_y = tile_y + @grid_y_offset
             if adjusted_tile_x < 0 or adjusted_tile_y < 0
@@ -98,12 +98,12 @@ module RdiaGames
             # elsif adjusted_tile_y >= @grid_height
             #     raise "Cannot set tile at y #{adjusted_tile_y}, max height index is #{@grid_height - 1}"
             # end
-            if widget.is_a? Widget
-                widget.x = relative_x(grid_to_relative_pixel(adjusted_tile_x))
-                widget.y = relative_y(grid_to_relative_pixel(adjusted_tile_y))
-                widget.scale = @scale
+            if tilepiece.is_a? Widget
+                tilepiece.x = relative_x(grid_to_relative_pixel(adjusted_tile_x))
+                tilepiece.y = relative_y(grid_to_relative_pixel(adjusted_tile_y))
+                tilepiece.scale = @scale
             end
-            @tiles[tile_x][tile_y] = widget 
+            @tiles[tile_x][tile_y] = tilepiece 
         end
 
         def remove_tile_at_absolute(x, y)

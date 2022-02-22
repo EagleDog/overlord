@@ -17,7 +17,8 @@ class Character < GameObject
         super(@img_array[@animation_count])
         disable_border
         @scale = 2     # might need this until we can scale the whole game to 2
-        @max_speed = 5
+        @max_speed = 8
+        load_sounds
     end
 
     def handle_update update_count, mouse_x, mouse_y
@@ -32,8 +33,16 @@ class Character < GameObject
         end
     end 
 
+    def kick
+        puts "kick"
+        @beep.play
+    end
+
     def stop_move 
         @speed = 0
+        puts "stop move"
+        @click2.play
+#        @typing7.play
     end 
 
     def start_move_right
@@ -41,6 +50,7 @@ class Character < GameObject
         start_move_in_direction(DEG_0)
         @acceleration = 0
         @speed = 1
+        @click.play
     end
 
     def start_move_left
@@ -48,6 +58,7 @@ class Character < GameObject
         start_move_in_direction(DEG_180)
         @acceleration = 0
         @speed = 1
+        @click.play
     end 
 
     def start_move_up
@@ -55,6 +66,7 @@ class Character < GameObject
         start_move_in_direction(DEG_90)
         @acceleration = 0
         @speed = 1
+        @click.play
     end
 
     def start_move_down
@@ -62,36 +74,27 @@ class Character < GameObject
         start_move_in_direction(DEG_270)
         @acceleration = 0
         @speed = 1
+        @click.play
     end
 
     def internal_move(grid) 
         if @speed < @max_speed
             speed_up
         end
-        player_move(grid)
+        move(grid)
     end 
 
-    def move_right(grid)
-        internal_move(grid) 
-    end
+    def move_right(grid);    internal_move(grid) ;    end
+    def move_left(grid);     internal_move(grid);    end
+    def move_up(grid);      internal_move(grid);    end
+    def move_down(grid);    internal_move(grid);    end
 
-    def move_left(grid)
-        internal_move(grid)
-    end
-
-    def move_up(grid)
-        internal_move(grid) 
-    end
-
-    def move_down(grid)
-        internal_move(grid) 
-    end
-
-    def player_move(grid)
+    def move(grid)
+        @click3.play
         @speed.round.times do
             proposed_next_x, proposed_next_y = proposed_move
-            widgets_at_proposed_spot = grid.proposed_widget_at(self, proposed_next_x, proposed_next_y)
-            if widgets_at_proposed_spot.empty?
+            occupants = grid.proposed_widget_at(self, proposed_next_x, proposed_next_y)
+            if occupants.empty?
                 set_absolute_position(proposed_next_x, proposed_next_y)
             else 
                 # determine what interactions occur with this object
@@ -105,7 +108,7 @@ class Character < GameObject
                 # RDIA_REACT_SCORE
                 # RDIA_REACT_LOSE
                 stop_motion = false
-                widgets_at_proposed_spot.each do |waps|
+                occupants.each do |waps|
                     if waps.interaction_results.include? RDIA_REACT_STOP
                         stop_motion = true 
                     end 
@@ -114,8 +117,25 @@ class Character < GameObject
                     set_absolute_position(proposed_next_x, proposed_next_y)
                 end
                 # 
-                    info("Can't move any further because #{widgets_at_proposed_spot.size} widget(s) are there ")
+# Player debug     info("Player can't move any further: " +
+#                        "#{occupants.size} " +
+#                        "widget(s) are there ")
             end
         end
     end
+
+    def load_sounds
+        @beep = Gosu::Sample.new('media/sounds/beep.ogg')
+        @chime = Gosu::Sample.new('media/sounds/chime.ogg')
+        @explosion = Gosu::Sample.new('media/sounds/explosion.ogg')
+        @typing3 = Gosu::Sample.new('media/sounds/typing3.ogg')
+        @typing4 = Gosu::Sample.new('media/sounds/typing4.ogg')
+        @typing5 = Gosu::Sample.new('media/sounds/typing5.ogg')
+        @typing6 = Gosu::Sample.new('media/sounds/typing6.ogg')
+        @typing7 = Gosu::Sample.new('media/sounds/typing7.ogg')
+        @click = Gosu::Sample.new('media/sounds/click.ogg')
+        @click2 = Gosu::Sample.new('media/sounds/click2.ogg')
+        @click3 = Gosu::Sample.new('media/sounds/cancel_sine1.ogg')
+    end
+
 end 

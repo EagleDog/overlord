@@ -12,6 +12,7 @@ class KeyBindings
         return 'right' if id == Gosu::KbD or id == Gosu::KbRight
         return 'up' if id == Gosu::KbW or id == Gosu::KbUp
         return 'down' if id == Gosu::KbS or id == Gosu::KbDown
+        return 'kick' if id == Gosu::KbSpace
     end
 
     def handle_key_held_down(id, mouse_x, mouse_y)
@@ -27,6 +28,7 @@ class KeyBindings
         @player.start_move_right if action_map(id) == 'right'
         @player.start_move_up if action_map(id) == 'up'
         @player.start_move_down if action_map(id) == 'down'
+        @player.kick if action_map(id) == 'kick'
     end
 
     def handle_key_up(id, mouse_x, mouse_y)

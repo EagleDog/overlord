@@ -24,11 +24,18 @@ class WorldMap
         @blue_brick = @tileset[1]   # the brick with an empty pixel on the left and right, so there is a gap
 
         @block1 = @tileset[50]
-        @b2 = @tileset[51]
-        @b3 = @tileset[52]
-        @b4 = @tileset[53]
-        @b5 = @tileset[54]
-        @b6 = @tileset[55]
+        @b2 = @tileset[71]
+        @b3 = @tileset[72]
+        @b4 = @tileset[73]
+        @b5 = @tileset[74]
+        @b6 = @tileset[60]
+        @b7 = @tileset[61]
+        @b8 = @tileset[62]
+        @b9 = @tileset[63]
+        @b10 = @tileset[64]
+        @b11 = @tileset[65]
+        @b12 = @tileset[65]
+
 
         @red_wall = @tileset[7]
         @yellow_dot = @tileset[18]
@@ -69,11 +76,20 @@ class WorldMap
                     img = OutOfBounds.new(@fire_transition_tile) if char == "F"
 
                     img = Block.new(@block1) if char == "p"
-                    img = Block.new(@b2) if char == "o"
+                    img = BackgroundArea.new(@b2) if char == "o"
                     img = Block.new(@b3) if char == "k"
-                    img = Block.new(@b4) if char == "k"
-                    img = Block.new(@b5) if char == "m"
-                    img = Block.new(@b6) if char == "n"
+                    img = Block.new(@b4) if char == "j"
+
+                    img = BackgroundArea.new(@b11) if char == "m"
+                    img = BackgroundArea.new(@b12) if char == "n"
+                    img = BackgroundArea.new(@b10) if char == "x"
+                    img = BackgroundArea.new(@b11) if char == "z"
+
+                    img = Block.new(@b2) if char == "b"
+                    img = Block.new(@b3) if char == "v"
+                    img = Block.new(@b4) if char == "c"
+                    img = Block.new(@b5) if char == "a"
+
 
                 end
                 

@@ -176,26 +176,16 @@ module RdiaGames
             return X_DIM
         end
 
-        def overlaps_with_proposed(proposed_x, proposed_y, other_widget)
+        def overlaps_with_proposed(proposed_x, proposed_y, other_object)
             # Darren
             delta_x = proposed_x - @x
             delta_y = proposed_y - @y
 
-            if other_widget.contains_click(@x + delta_x, @y + delta_y)
-                return true
-            end
-            if other_widget.contains_click(right_edge + delta_x, @y + delta_y)
-                return true
-            end
-            if other_widget.contains_click(right_edge + delta_x, bottom_edge - 1 + delta_y)
-                return true
-            end
-            if other_widget.contains_click(@x + delta_x, bottom_edge - 1 + delta_y)
-                return true
-            end
-            if other_widget.contains_click(center_x + delta_x, center_y + delta_y)
-                return true
-            end
+            return true if other_object.contains_click(@x + delta_x, @y + delta_y)
+            return true if other_object.contains_click(right_edge + delta_x, @y + delta_y)
+            return true if other_object.contains_click(right_edge + delta_x, bottom_edge - 1 + delta_y)
+            return true if other_object.contains_click(@x + delta_x, bottom_edge - 1 + delta_y)
+            return true if other_object.contains_click(center_x + delta_x, center_y + delta_y)
             return false
         end
 
