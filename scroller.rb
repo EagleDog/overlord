@@ -206,6 +206,16 @@ class Scroller < Widget
     end
 
     def handle_key_press(id, mouse_x, mouse_y)
+        @player.q0 if id == Gosu::KbQ
+        @player.e0 if id == Gosu::KbE
+        @player.r0 if id == Gosu::KbR
+        @player.z0 if id == Gosu::KbZ
+        @player.x0 if id == Gosu::KbX
+        @player.c0 if id == Gosu::KbC
+        @player.t0 if id == Gosu::KbT
+
+
+
 #        @bindings.handle_key_press(id, mouse_x, mouse_y)
         @player.start_move_left if action_map(id) == 'left'
         @player.start_move_right if action_map(id) == 'right'

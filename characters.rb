@@ -35,8 +35,19 @@ class Character < GameObject
 
     def kick
         puts "kick"
-        @beep.play
+        @chirp1.play
     end
+
+    def q0; @beep1.play; end
+    def r0; @beep2.play; end
+    def e0; @beep3.play; end
+    def z0; @beep4.play; end
+    def x0; @beep5.play; end
+    def c0; @beep6.play; end
+    def t0; @beep7.play; end
+
+
+
 
     def stop_move 
         @speed = 0
@@ -136,6 +147,19 @@ class Character < GameObject
         @click = Gosu::Sample.new('media/sounds/click.ogg')
         @click2 = Gosu::Sample.new('media/sounds/click2.ogg')
         @click3 = Gosu::Sample.new('media/sounds/cancel_sine1.ogg')
+
+        @beep1 = Gosu::Sample.new('media/beeps/beep1.ogg')
+        @beep2 = Gosu::Sample.new('media/beeps/beep2.ogg')
+        @beep3 = Gosu::Sample.new('media/beeps/beep3.ogg')
+        @beep4 = Gosu::Sample.new('media/beeps/beep4.ogg')
+        @beep5 = Gosu::Sample.new('media/beeps/beep5.ogg')
+        @beep6 = Gosu::Sample.new('media/beeps/beep6.ogg')
+        @beep7 = Gosu::Sample.new('media/beeps/beep7.ogg')
+
+        @chirp1 = Gosu::Sample.new('media/beeps/chirp1.ogg')
+        @chirp2 = Gosu::Sample.new('media/beeps/chirp2.ogg')
+
+
     end
 
 end 
