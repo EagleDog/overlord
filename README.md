@@ -3,6 +3,9 @@
 
 ## Upcoming Features
 ```
+ - Add beep sounds.
+ - AI Mobs.
+ - 
  - Create Ballrag object (@balljack).
  - Push/Roll/Kick Ballrag (@balljack) around screen.
  - Create AI Mob Units to roam map.
