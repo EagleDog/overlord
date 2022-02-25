@@ -10,13 +10,14 @@ require_relative 'bin/pathfinder'
 require_relative 'ball_object'
 require_relative 'objects'
 require_relative 'scroller'
-require_relative 'characters'
+require_relative 'character'
+require_relative 'mob'
 require_relative 'tiles'
 require_relative 'themes'
 
 GAME_WIDTH = 1200
 GAME_HEIGHT = 700
-GAME_START_X = 10
+GAME_START_X = 10  
 GAME_START_Y = 10
 
 DIRECTION_TOWARDS = 0
@@ -31,15 +32,16 @@ class Overlord < RdiaGame
         super(GAME_WIDTH, GAME_HEIGHT, "Overlord", Scroller.new) #OverDisplay.new)
         key_bindings
 #        setup
-        play_music
+#        play_music
 
     end 
 
     def play_music
 #        self.load_sound(window)
+#        @music = Gosu::Song.new('media/sounds/typing7.ogg')
         @music = Gosu::Song.new('media/adventure.ogg')
-        @music.volume = 0.2
-        @music.play(true)
+        @music.volume = 0.1
+        @music.play(false)
     end
 
 

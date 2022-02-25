@@ -11,11 +11,11 @@
 #    add_button("Use Eraser", 940, 680, 120)
 #
 
-class EditorDisplay < Widget
+class Editor < Widget
     def initialize()
         super(0, 0, GAME_WIDTH, GAME_HEIGHT)
         disable_border
-        @board_file = 'maps/maps/editor_board.txt'
+        @board_file = 'maps/editor_board.txt'
 
         @camera_x = 0
         @camera_y = 0
@@ -32,11 +32,11 @@ class EditorDisplay < Widget
 
         @selected_tile = nil
 
-        @tileset = Gosu::Image.load_tiles("media/basictiles.png", 16, 16, tileable: true)
-        @diagonal_tileset = Gosu::Image.load_tiles("media/diagonaltiles.png", 16, 16, tileable: true)
+        @tileset = Gosu::Image.load_tiles("../media/basictiles.png", 16, 16, tileable: true)
+        @diagonal_tileset = Gosu::Image.load_tiles("../media/diagonaltiles.png", 16, 16, tileable: true)
 
 
-        @grid = GridDisplay.new(0, 0, 16, 21, 40)   #21, 95)
+        @grid = Grid.new(0, 0, 16, 21, 40)   #21, 95)
 
 
         @grid.display_grid = true
@@ -54,19 +54,9 @@ class EditorDisplay < Widget
 
         add_shadow_boxes
         debug
-    end 
 
-    def handle_key_press id, mouse_x, mouse_y
-        if id == Gosu::KbA or id == Gosu::KbLeft
-            @player.start_move_left 
-        elsif id == Gosu::KbD or id == Gosu::KbRight
-            @player.start_move_right 
-        elsif id == Gosu::KbW or id == Gosu::KbUp
-            @player.start_move_up 
-        elsif id == Gosu::KbS or id == Gosu::KbDown
-            @player.start_move_down
-        end
-    end
+        load_sounds
+    end 
 
     def add_erasor_button
         add_button("Use Eraser", 400, 200, 120) do  #940, 680, 120) do
@@ -158,39 +148,76 @@ class EditorDisplay < Widget
     end
 
     def handle_key_held_down id, mouse_x, mouse_y
-        if id == Gosu::KbA
-            @center_x = @center_x - @speed
-        elsif id == Gosu::KbD
-            @center_x = @center_x + @speed
-        elsif id == Gosu::KbW
-            @center_y = @center_y - @speed
-        elsif id == Gosu::KbS
-            @center_y = @center_y + @speed
-        end
+        press_a if id == Gosu::KbA
+        press_d if id == Gosu::KbD
+        press_w if id == Gosu::KbW
+        press_s if id == Gosu::KbS
         puts "moved center to #{@center_x}, #{@center_y}"
     end
 
-    def handle_key_press id, mouse_x, mouse_y
-        if id == Gosu::KbA
-            @center_x = @center_x - @speed
-        elsif id == Gosu::KbD
-            @center_x = @center_x + @speed
-        elsif id == Gosu::KbW
-            @center_y = @center_y - @speed
-        elsif id == Gosu::KbS
-            @center_y = @center_y + @speed
-        elsif id == Gosu::KbP
-            save_board
-        elsif id == Gosu::KbG
-            @grid.display_grid = !@grid.display_grid
-        end
+    def press_a;  @center_x = @center_x - @speed;  end
+    def press_d;  @center_x = @center_x + @speed;  end
+    def press_w;  @center_y = @center_y - @speed;  end
+
+    def press_g
+        @grid.display_grid = !@grid.display_grid
+    end
+
+    def press_s
+        @center_y = @center_y + @speed
+        @click_low.play
+        puts "editor press_s"
+    end
+
+    def press_p
+        @click_high.play
+        save_board
+    end
+
+    def handle_key_press(id, mouse_x, mouse_y)
+        press_a if id == Gosu::KbA
+        press_d if id == Gosu::KbD
+        press_w if id == Gosu::KbW
+        press_s if id == Gosu::KbS
+        press_g if id == Gosu::KbG
+        press_p if id == Gosu::KbP
     end
 
     def handle_key_up id, mouse_x, mouse_y
-        #if id == Gosu::KbA or id == Gosu::KbD or id == Gosu::KbW or id == Gosu::KbS
-        #    @player.stop_move
-        #end
     end
+
+    ### LOAD_SOUNDS ###                LOAD_SOUNDS
+    def load_sounds
+         @click_low = Gosu::Sample.new('../media/sounds/click_low.ogg')
+         @click_high = Gosu::Sample.new('../media/sounds/click_high.ogg')
+    end
+
+
+    ### SAVE_BOARD ###                  SAVE_BOARD
+    def save_board 
+        puts "Going to save board"
+        open("dump/dump1.txt", 'w') { |f|
+            (0..@grid.grid_height-1).each do |y|
+                str = ""
+                (0..@grid.grid_width-1).each do |x|
+                    pallette_tile = @grid.get_tile(x, y)
+                    if pallette_tile.nil?
+                        str = "#{str}. "
+                    else
+                        if pallette_tile.index.to_i < 10
+                            str = "#{str}#{pallette_tile.index} "
+                        else
+                            str = "#{str}#{pallette_tile.index}"
+                        end
+                    end
+                end
+                f.puts str
+            end
+        }
+    end
+
+
+    ### HANDLE_MOUSE_DOWN ###        HANDLE_MOUSE_DOWN
 
     def handle_mouse_down mouse_x, mouse_y
         @mouse_dragging = true
@@ -224,6 +251,7 @@ class EditorDisplay < Widget
         @mouse_dragging = false
     end
 
+    ### CREATE_BOARD ###                  CREATE_BOARD
 
     # Takes an array of strings that represents the board
     def create_board(map_array)         
@@ -258,28 +286,9 @@ class EditorDisplay < Widget
         end
     end 
 
-    def save_board 
-        puts "Going to save board"
-        open("maps/dump/editor_new_board.txt", 'w') { |f|
-            (0..@grid.grid_height-1).each do |y|
-                str = ""
-                (0..@grid.grid_width-1).each do |x|
-                    pallette_tile = @grid.get_tile(x, y)
-                    if pallette_tile.nil?
-                        str = "#{str}. "
-                    else
-                        if pallette_tile.index.to_i < 10
-                            str = "#{str}#{pallette_tile.index} "
-                        else
-                            str = "#{str}#{pallette_tile.index}"
-                        end
-                    end
-                end
-                f.puts str
-            end
-        }
-    end
 
+
+    ### DEBUG ###                           DEBUG
     def debug
         puts 'tile_size: ' + @grid.tile_size.to_s
         puts 'grid_width: ' + @grid.grid_width.to_s

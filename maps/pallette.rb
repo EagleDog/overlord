@@ -56,7 +56,7 @@ class TilePalletteDisplay < Widget
 
     def addPalletteItems 
         @tileCords.map do |x, y, order|
-            add_child(PalletteTile.new(@x + x, @y + y, "./media/tiles/tile#{order.to_s}.png", 2, order))
+            add_child(PalletteTile.new(@x + x, @y + y, "../media/tiles/tile#{order.to_s}.png", 2, order))
         end
     end
 end

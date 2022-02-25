@@ -1,18 +1,18 @@
 
-class Character < GameObject 
+class Mob < Character
 
     def initialize(args = {})
         @animation_count = 1
         @direction = DIRECTION_TOWARDS
-        @character_tileset =
+        @mob_sheet =
           Gosu::Image.load_tiles(
-            "media/characters.png", 
+            "media/skel_sprite.png", 
             16, 16, 
             tileable: true)
-        @img_towards = [@character_tileset[3], @character_tileset[4], @character_tileset[5]]
-        @img_left = [@character_tileset[15], @character_tileset[16], @character_tileset[17]]
-        @img_right = [@character_tileset[27], @character_tileset[28], @character_tileset[29]]
-        @img_away = [@character_tileset[39], @character_tileset[40], @character_tileset[41]]
+        @img_towards = [@mob_sheet[1], @mob_sheet[2], @mob_sheet[3]]
+        @img_left = [@mob_sheet[4], @mob_sheet[5], @mob_sheet[6]]
+        @img_right = [@mob_sheet[7], @mob_sheet[8], @mob_sheet[9]]
+        @img_away = [@mob_sheet[10], @mob_sheet[11], @mob_sheet[12]]
         @img_array = @img_towards
         super(@img_array[@animation_count])
         disable_border
@@ -38,13 +38,17 @@ class Character < GameObject
         @chirp1.play
     end
 
-    def q0; @beep1.play; end
-    def r0; @beep2.play; end
-    def e0; @beep3.play; end
-    def z0; @beep4.play; end
-    def x0; @beep5.play; end
-    def c0; @beep6.play; end
-    def t0; @beep7.play; end
+    def press_q; @beep1.play; end
+    def press_e; @beep3.play; end
+    def press_r; @beep2.play; end
+    def press_t; @beep7.play; end
+    def press_f; @robot1.play; end
+    def press_g; @robot2.play; end
+    def press_z; @robot3.play; end
+    def press_x; @beep5.play; end
+    def press_c; @beep6.play; end
+    def press_v; @robot4.play; end
+    def press_b; @beep4.play; end
 
 
 

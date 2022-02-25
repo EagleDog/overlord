@@ -1,4 +1,51 @@
+
+
+
+
+.        flashcards
+
 #
+#
+#
+#
+#
+#
+#
+#   $ git status
+#
+#
+#
+#
+#
+#
+#
+#   ~/c/     $
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#                  E l i t e
+#             C a r d m a s t e r
+#              C h a l l e n g e
+#
+#               N e w   R o u n d
+#
+#                F e b   2 0 2 2
+#
+#             L i v e   S t r e a m
+#
+#      A n i m a t i o n   T h r o w d o w n
+#
+#
+#
+#
+#               git commit -m "readme"
 #
 #
 #
