@@ -11,21 +11,32 @@
 #
 #
 #
+#
+#
+#
+#
+#
+#
+#         sound quality check
+#
+#       Gosu Game Jam Feb 2022 
+#
+#           Live Coverage
+#
+#             Overlord
+#
+#             eagleDog
+#          agrotizer 2022
+#
+#
+#
+#
+#
+#
+#
 #   $ git status
 #
-#
-#
-#
-#
-#
-#
 #   ~/c/     $
-#
-#
-#
-#
-#
-#
 #
 #
 #

@@ -1,27 +1,54 @@
 
-class Mob < Character
+class Mob < GameObject
 
     def initialize(args = {})
         @animation_count = 1
         @direction = DIRECTION_TOWARDS
         @mob_sheet =
           Gosu::Image.load_tiles(
-            "media/skel_sprite.png", 
+            args, 
             16, 16, 
             tileable: true)
-        @img_towards = [@mob_sheet[1], @mob_sheet[2], @mob_sheet[3]]
-        @img_left = [@mob_sheet[4], @mob_sheet[5], @mob_sheet[6]]
-        @img_right = [@mob_sheet[7], @mob_sheet[8], @mob_sheet[9]]
-        @img_away = [@mob_sheet[10], @mob_sheet[11], @mob_sheet[12]]
+        @img_towards = [@mob_sheet[0], @mob_sheet[1], @mob_sheet[2]]
+        @img_left = [@mob_sheet[3], @mob_sheet[4], @mob_sheet[4]]
+        @img_right = [@mob_sheet[6], @mob_sheet[7], @mob_sheet[8]]
+        @img_away = [@mob_sheet[9], @mob_sheet[10], @mob_sheet[11]]
         @img_array = @img_towards
         super(@img_array[@animation_count])
         disable_border
         @scale = 2     # might need this until we can scale the whole game to 2
-        @max_speed = 8
-        load_sounds
+        @max_speed = 20
+        @speed = 5
+        puts args
+    end
+
+
+    def choose_direction
+        if rand(8) == 4; @direction = DIRECTION_TOWARDS; end
+    end
+
+    def move_it(grid)
+        if choice
+            go_left(grid)
+        elsif choice
+            go_right(grid)
+        elsif choice
+            go_up(grid)
+        else
+            go_down(grid)
+        end
+
+    end
+
+    def choice
+        if rand(4) == 1
+           return true
+        end
     end
 
     def handle_update update_count, mouse_x, mouse_y
+#        move
+
         if @speed < 0.01
             @img = @img_array[1]
         elsif update_count % 10 == 0    # if we do this every count, you can't even see it
@@ -38,25 +65,11 @@ class Mob < Character
         @chirp1.play
     end
 
-    def press_q; @beep1.play; end
-    def press_e; @beep3.play; end
-    def press_r; @beep2.play; end
-    def press_t; @beep7.play; end
-    def press_f; @robot1.play; end
-    def press_g; @robot2.play; end
-    def press_z; @robot3.play; end
-    def press_x; @beep5.play; end
-    def press_c; @beep6.play; end
-    def press_v; @robot4.play; end
-    def press_b; @beep4.play; end
-
-
-
 
     def stop_move 
         @speed = 0
         puts "stop move"
-        @click2.play
+#        @click2.play
 #        @typing7.play
     end 
 
@@ -65,7 +78,7 @@ class Mob < Character
         start_move_in_direction(DEG_0)
         @acceleration = 0
         @speed = 1
-        @click.play
+#        @click.play
     end
 
     def start_move_left
@@ -73,7 +86,7 @@ class Mob < Character
         start_move_in_direction(DEG_180)
         @acceleration = 0
         @speed = 1
-        @click.play
+#        @click.play
     end 
 
     def start_move_up
@@ -81,7 +94,7 @@ class Mob < Character
         start_move_in_direction(DEG_90)
         @acceleration = 0
         @speed = 1
-        @click.play
+#        @click.play
     end
 
     def start_move_down
@@ -89,7 +102,7 @@ class Mob < Character
         start_move_in_direction(DEG_270)
         @acceleration = 0
         @speed = 1
-        @click.play
+#        @click.play
     end
 
     def internal_move(grid) 
@@ -104,8 +117,27 @@ class Mob < Character
     def move_up(grid);      internal_move(grid);    end
     def move_down(grid);    internal_move(grid);    end
 
+    def go_left(grid)
+        start_move_left
+        internal_move(grid)
+    end
+    def go_right(grid)
+        start_move_right
+        internal_move(grid)
+    end
+    def go_up(grid)
+        start_move_up
+        internal_move(grid)
+    end
+    def go_down(grid)
+        start_move_down
+        internal_move(grid)
+    end
+
+
+
     def move(grid)
-        @click3.play
+#        @click3.play
         @speed.round.times do
             proposed_next_x, proposed_next_y = proposed_move
             occupants = grid.proposed_widget_at(self, proposed_next_x, proposed_next_y)

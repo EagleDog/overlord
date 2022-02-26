@@ -13,6 +13,7 @@ module Wads
 
         def initialize(x, y, image, args = {}) 
             super(x, y)
+            @override_color = Gosu::Color.new()
             if image.is_a? String
                 @img = Gosu::Image.new(image)
             elsif image.is_a? Gosu::Image 

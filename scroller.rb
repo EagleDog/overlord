@@ -38,6 +38,7 @@ class Scroller < Widget
         load_char
         load_ball
 
+        load_mobs
 #        load_bindings
 
         load_map  # LOAD MAP
@@ -66,7 +67,23 @@ class Scroller < Widget
                                                      {ARG_TEXT_ALIGN => TEXT_ALIGN_RIGHT})
     end
 
-
+    def load_mobs                          # LOAD_MOBS
+        @mob1 = Mob.new("media/sprites/skeleton.png")
+        @mob2 = Mob.new("media/sprites/blob.png")
+        @mob3 = Mob.new("media/sprites/girl.png")
+        @mob4 = Mob.new("media/sprites/spider.png")
+        @mob5 = Mob.new("media/sprites/ghoul.png")
+        @mob1.set_absolute_position(250, 300)
+        @mob2.set_absolute_position(300, 300)
+        @mob3.set_absolute_position(350, 300)
+        @mob4.set_absolute_position(400, 300)
+        @mob5.set_absolute_position(450, 300)
+        add_child(@mob1)
+        add_child(@mob2)
+        add_child(@mob3)
+        add_child(@mob4)
+        add_child(@mob5)
+    end
 
     def load_char                          # LOAD_CHAR
         @char = Character.new
@@ -74,7 +91,7 @@ class Scroller < Widget
         add_child(@char)
     end
 
-    def load_ball                             # LOAD_BALL
+    def load_ball                          # LOAD_BALL
         @ball = Ballrag.new
         add_child(@ball)
     end
@@ -83,11 +100,11 @@ class Scroller < Widget
     #     @bindings = KeyBindings.new(@char)
     # end
 
-    def load_map    # LOAD MAP                   # LOAD_MAP  __________________
+    def load_map    # LOAD MAP             # LOAD_MAP  __________________
 
         @worldmap.create_board(File.readlines("maps/maps/a3.txt"))
 
-        add_child(@grid)                    #              ____________________
+        add_child(@grid)                    #        ____________________
     end
 
 
@@ -97,8 +114,15 @@ class Scroller < Widget
         ball_logic
         move_camera
         collision_detection(children)
-
+        move_mobs
     end
+
+    def move_mobs
+        @mob1.move_it(@grid)
+        @mob2.move_it(@grid)
+        @mob3.move_it(@grid)
+    end
+
 
     def move_camera
         # Scrolling follows char  # @camera_x = [[@char.x - (GAME_WIDTH.to_f / 2), 0].max, @grid.grid_width * 32 - GAME_WIDTH].min
@@ -183,7 +207,8 @@ class Scroller < Widget
             draw_border
         end
         @children.each do |child|
-            if child.is_a? GridDisplay or child.is_a? Character or child.is_a? Ballrag
+            if child.is_a? GridDisplay or child.is_a? Character or 
+               child.is_a? Ballrag or child.is_a? Mob
                 # skip
             else
                 child.draw
@@ -194,6 +219,11 @@ class Scroller < Widget
             @grid.draw
             @char.draw
             @ball.draw
+            @mob1.draw
+            @mob2.draw
+            @mob3.draw
+            @mob4.draw
+            @mob5.draw
         end
     end 
 

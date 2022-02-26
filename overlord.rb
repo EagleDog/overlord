@@ -11,7 +11,7 @@ require_relative 'ball_object'
 require_relative 'objects'
 require_relative 'scroller'
 require_relative 'character'
-require_relative 'mob'
+require_relative 'mobs'
 require_relative 'tiles'
 require_relative 'themes'
 
@@ -32,7 +32,7 @@ class Overlord < RdiaGame
         super(GAME_WIDTH, GAME_HEIGHT, "Overlord", Scroller.new) #OverDisplay.new)
         key_bindings
 #        setup
-#        play_music
+        play_music
 
     end 
 
