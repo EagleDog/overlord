@@ -171,6 +171,7 @@ class Character < GameObject
         @zap1 = Gosu::Sample.new('media/beeps/zap1.ogg')
         @zap2 = Gosu::Sample.new('media/beeps/zap2.ogg')
 
+        @break = Gosu::Sample.new('media/sfx/break.ogg')
 
     end
 
@@ -189,7 +190,7 @@ class Character < GameObject
     def press_n; @fwhick.play; end
     def press_m; @fwhick.play; end
 
-    def press_u; @power_down.play; end
+    def press_u; @break.play; end
     def press_i; @power_down.play; end
     def press_o; @power_up.play; end
     def press_p; @power_up.play; end

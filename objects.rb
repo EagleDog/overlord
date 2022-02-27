@@ -22,7 +22,7 @@ class Ballrag < BallObject
     def init_direction_and_speed 
         @direction = DEG_45
         @acceleration = 0
-        @speed = 10
+        @speed = 5
     end
 
 

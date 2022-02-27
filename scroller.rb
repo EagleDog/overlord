@@ -53,6 +53,7 @@ class Scroller < Widget
 
         @bouncing = false
         load_goal_text
+        reset_level
     end 
 
     def reset_level
@@ -65,11 +66,23 @@ class Scroller < Widget
         @ball.set_absolute_position(150, 200)
     end
 
+    def restart_level
+        reset_level
+        @pause = true
+    end
+
+    def continue
+        play_chime
+        if @pause
+            unpause_game
+        else
+            pause_game
+        end
+    end
 
     def load_goal_text
         @goal_text = add_text("GOAL", 750, 450)
     end
-
 
     def load_panels                     #  LOAD_PANELS    LOAD_PANELS
         header_panel = add_panel(SECTION_NORTH)
@@ -115,7 +128,7 @@ class Scroller < Widget
 
     #
     #
-    #   HANDLE_UPDATE              HANDLE_UPDATE   HANDLE_UPDATE
+    #   HANDLE_UPDATE              HANDLE_UPDATE   HANDLE_UPDATE   HANDLE_UPDATE   HANDLE_UPDATE   HANDLE_UPDATE
     #
     def handle_update update_count, mouse_x, mouse_y
         return if @pause
@@ -251,9 +264,10 @@ class Scroller < Widget
         @char.start_move_right if action_map(id) == 'right'
         @char.start_move_up if action_map(id) == 'up'
         @char.start_move_down if action_map(id) == 'down'
-        @char.kick if action_map(id) == 'kick'
         # puts "key press"
         # @bindings.handle_key_press(id, mouse_x, mouse_y)
+
+        continue if id == Gosu::KbSpace
     end
 
 
@@ -266,7 +280,7 @@ class Scroller < Widget
      #   PLAY_SOUNDS                     # PLAY_SOUNDS    PLAY_SOUNDS   PLAY_SOUNDS
      def play_beep0;    @beep0.play;  end
      def play_chime;    @chime.play;   end
-     def play_click_low; @click_low.play;  end
+     def play_click; @click_low.play;  end
 
 
     def handle_key_up(id, mouse_x, mouse_y)
@@ -293,7 +307,8 @@ class Scroller < Widget
         result
     end
 
-
+    ##              ##
+    #   BALL_LOGIC   #
     def ball_logic              #  BALL_LOGIC   BALL_LOGIC  BALL_LOGIC
         next_x, next_y = @ball.proposed_move
         occupant = @grid.proposed_widget_at(@ball, next_x, next_y)
@@ -347,7 +362,7 @@ class Scroller < Widget
     end
 
     def square_bounce(w)
-        @ball.speed = 5
+        @ball.speed = 4
         if is_bouncing?(w)
             @bouncing = true
             @ball.bounce_y if y_bounce?(w)
@@ -355,7 +370,8 @@ class Scroller < Widget
             @ball.bounce_x if x_bounce?(w)
         #    puts "bounce_x" if x_bounce?(w)
         else 
-           info("wall doesnt know how to bounce ball. #{w.x}  #{@ball.center_x}  #{w.right_edge}")
+            info("wall doesnt know how to bounce ball. #{w.x}  #{@ball.center_x}  #{w.right_edge}")
+#            play_chime
             quad = @ball.relative_quad(w)
 #            info("Going to bounce off relative quad #{quad}")
             gdd = nil
@@ -373,20 +389,21 @@ class Scroller < Widget
 
             if gdd == X_DIM
                 @ball.bounce_x
-                @ball.speed = 5
+                @ball.speed = 3
             else 
                 # Right now, if it is not defined, one of the diagonal quadrants
                 # we are bouncing on the y dimension.
                 # Not technically accurate, but probably good enough for now
                 @ball.bounce_y
-                @ball.speed = 5
+                @ball.speed = 3
             end
         end
     end 
 
     def diagonal_bounce(w)
         if @ball.direction > DEG_360 
-            raise "ERROR ball radians are above double pi #{@ball.direction}. Cannot adjust triangle accelerations"
+            raise "ERROR ball radians are above double pi #{@ball.direction}. " +
+                  "Cannot adjust triangle accelerations"
         end
 
         axis = AXIS_VALUES[w.orientation]
@@ -409,7 +426,10 @@ class Scroller < Widget
 #        @ball.direction = 0.15 + (pct * (Math::PI - 0.3.to_f))
         @ball.direction = rand(360)
         @ball.speed = 5
-        # info("Scale length: #{scale_length}  Impact on Scale: #{impact_on_scale.round}  Pct: #{pct.round(2)}  rad: #{@ball.direction.round(2)}  speed: #{@ball.speed}")
+        # info("Scale length: #{scale_length}  " + 
+        #      "Impact on Scale: #{impact_on_scale.round}  "+
+        #      "Pct: #{pct.round(2)}  rad: #{@ball.direction.round(2)}  "+
+        #      "speed: #{@ball.speed}")
         # info("#{impact_on_scale.round}/#{scale_length}:  #{pct.round(2)}%")
         @ball.last_element_bounce = @char.object_id
     end
@@ -419,16 +439,16 @@ class Scroller < Widget
         @ball.direction = @ball.direction + r
     end
 
-    def pause_game          # PAUSE
-        if @pause 
-            return 
-        end 
+    def pause_game                     # PAUSE
+#        return if @pause 
         @pause = true 
 #        @progress_bar.stop
     end 
 
-    def restart_game        # RESTART
-        @pause = false 
+    def unpause_game                   # UNPAUSE
+        @pause = false
+        # return if !@pause 
+        # @pause = false if @pause == true
 #        @progress_bar.start
     end 
 
@@ -438,7 +458,7 @@ class Scroller < Widget
     #                         #
     #   COLLISION_DETECTION   #
     #                         #
-    def collision_detection(objects)      #  INTERACT     INTERACT
+    def collision_detection(objects)      #  COLLISION_DETECTION
         if objects.size == 1
             w = objects[0]
             if w.object_id == @ball.last_element_bounce
@@ -491,32 +511,32 @@ class Scroller < Widget
 
         if w.interaction_results.include? RDIA_REACT_BOUNCE 
             square_bounce(w)
-        elsif w.interaction_results.include? RDIA_REACT_BOUNCE_DIAGONAL
+        end
+        if w.interaction_results.include? RDIA_REACT_BOUNCE_DIAGONAL
             diagonal_bounce(w)
         end
 
         if w.interaction_results.include? RDIA_REACT_CONSUME
             @grid.remove_tile_at_absolute(w.x + 1, w.y + 1)
             @char.press_u
-#            tilt
+        #    tilt
         end
-
+# SCORE
         if w.interaction_results.include? RDIA_REACT_SCORE
             @score = @score + w.score
             @score_text.label = "#{@score}"
         end
-
+# LOSE
         if w.interaction_results.include? RDIA_REACT_LOSE 
             @pause = true
             @game_mode = RDIA_MODE_END
             if @overlay_widget.nil?
                 add_overlay(create_you_lose_widget)
             end
-            reset_level
-            @pause = false
+            restart_level
         end
 
-
+# GOAL
         if w.interaction_results.include? RDIA_REACT_GOAL
             @pause = true
             @game_mode = RDIA_MODE_END
@@ -526,8 +546,8 @@ class Scroller < Widget
             end
         end
 
+        play_click
         true
-
     end
 
 
