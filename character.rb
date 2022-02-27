@@ -36,13 +36,13 @@ class Character < GameObject
     def kick
         puts rand(4)
         puts "kick"
-        @slice.play
+        # @slice.play
 #        @chirp1.play
     end
 
     def stop_move 
         @speed = 0
-        puts "stop move"
+        # puts "stop move"
 #        @click2.play
 ##        @click1.play
     end 
@@ -52,7 +52,7 @@ class Character < GameObject
         start_move_in_direction(DEG_0)
         @acceleration = 0
         @speed = 1
-        @click5.play
+        # @click5.play
 #        @typing5.play
     end
 
@@ -61,7 +61,7 @@ class Character < GameObject
         start_move_in_direction(DEG_180)
         @acceleration = 0
         @speed = 1
-        @click5.play
+        # @click5.play
 #        @typing5.play
     end 
 
@@ -70,7 +70,7 @@ class Character < GameObject
         start_move_in_direction(DEG_90)
         @acceleration = 0
         @speed = 1
-        @click5.play
+        # @click5.play
         # @typing4.play
     end
 
@@ -79,7 +79,7 @@ class Character < GameObject
         start_move_in_direction(DEG_270)
         @acceleration = 0
         @speed = 1
-        @click5.play
+        # @click5.play
         # @typing4.play
     end
 

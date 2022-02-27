@@ -184,17 +184,21 @@ class BallObject < ImageWidget
     end 
     
     def bounce_x
+        # puts "START bounce #{axis}. Direction #{@direction}"
         @direction = calculate_bounce(DEG_270)
+        # puts "END bounce #{axis}. Direction #{@direction}"
     end
 
     def bounce_y
+        # puts "START bounce #{axis}. Direction #{@direction}"
         @direction = calculate_bounce(DEG_360)
+        # puts "END bounce #{axis}. Direction #{@direction}"
     end
 
     def bounce(axis)
-        #puts "START bounce #{axis}. Direction #{@direction}"
+        # puts "START bounce #{axis}. Direction #{@direction}"
         @direction = calculate_bounce(axis)
-        #puts "END bounce #{axis}. Direction #{@direction}"
+        # puts "END bounce #{axis}. Direction #{@direction}"
     end
 
     def calculate_bounce(axis)

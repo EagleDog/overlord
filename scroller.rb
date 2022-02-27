@@ -201,22 +201,24 @@ class Scroller < Widget
         if occupant.empty?
 
             if @ball.overlaps(proposed_next_x, proposed_next_y, @char)
-                puts "ball hit char"
-                play_chime
+                # puts "ball hit char"
+                # play_chime
                 bounce_off_char(proposed_next_x, proposed_next_y)
 
             else
-                puts "bounce other"
+                # puts "bounce other"
                 @ball.set_absolute_position(proposed_next_x, proposed_next_y)
             end
 
         else 
-            #info("Found candidate objects to interact")
+			objs = occupant.map { |oo| oo.class }
+            # puts "Found candidate objects to interact #{objs}"
             if collision_detection(occupant) #, update_count)
-                puts "bounce wall or block"
+                # puts "^^^^^ bounce wall or block"
                 @ball.set_absolute_position(proposed_next_x, proposed_next_y) 
-
-                play_beep0
+                # play_beep0
+			else
+                # puts "^^^^^ NO GRID BOUNCE ???"
             end
         end
     end
@@ -235,7 +237,7 @@ class Scroller < Widget
         @char.move_right(@grid) if action_map(id) == 'right'
         @char.move_up(@grid) if action_map(id) == 'up'
         @char.move_down(@grid) if action_map(id) == 'down'
-        puts "key down"
+        # puts "key down"
         # puts "#{@char.x}, #{@char.y}    Camera: #{@camera_x}, #{@camera_y}   Tile: #{@grid.tile_at_absolute(@char.x, @char.y)}"
         # @bindings.handle_key_held_down(id, mouse_x, mouse_y)
     end
@@ -272,7 +274,7 @@ class Scroller < Widget
         @char.start_move_up if action_map(id) == 'up'
         @char.start_move_down if action_map(id) == 'down'
         @char.kick if action_map(id) == 'kick'
-        puts "key press"
+        # puts "key press"
         # @bindings.handle_key_press(id, mouse_x, mouse_y)
     end
 
@@ -294,7 +296,7 @@ class Scroller < Widget
         if id == Gosu::KbA or id == Gosu::KbD or id == Gosu::KbW or id == Gosu::KbS or
            id == Gosu::KbLeft or id == Gosu::KbRight or id == Gosu::KbUp or id == Gosu::KbDown
             @char.stop_move
-            puts "key up"
+            # puts "key up"
         end
     end
 
@@ -335,11 +337,11 @@ class Scroller < Widget
         if is_bouncing?(w)
             @bouncing = true
             @ball.bounce_y if y_bounce?(w)
-#            puts "bounce_y" if y_bounce?(w)
+        #    puts "bounce_y" if y_bounce?(w)
             @ball.bounce_x if x_bounce?(w)
-#            puts "bounce_x" if x_bounce?(w)
+        #    puts "bounce_x" if x_bounce?(w)
         else 
-#            info("wall doesnt know how to bounce ball. #{w.x}  #{@ball.center_x}  #{w.right_edge}")
+           info("wall doesnt know how to bounce ball. #{w.x}  #{@ball.center_x}  #{w.right_edge}")
             quad = @ball.relative_quad(w)
 #            info("Going to bounce off relative quad #{quad}")
             gdd = nil
@@ -375,24 +377,24 @@ class Scroller < Widget
 
         axis = AXIS_VALUES[w.orientation]
         if @ball.will_hit_axis(axis)
-            #puts "Triangle bounce"
+            puts "Triangle bounce"
             @ball.bounce(axis)
         else 
-            #puts "Square bounce"
+            puts "Square bounce"
             square_bounce(w)
         end
     end 
 
     def bounce_off_char(proposed_next_x, proposed_next_y)
-        puts "bounce_off_char"
+        # puts "bounce_off_char"
         in_radians = @ball.direction
         cx = @ball.center_x 
         scale_length = @char.width + @ball.width
         impact_on_scale = ((@char.right_edge + (@ball.width / 2)) - cx) + 0.25
         pct = impact_on_scale.to_f / scale_length.to_f
         @ball.direction = 0.15 + (pct * (Math::PI - 0.3.to_f))
-        #info("Scale length: #{scale_length}  Impact on Scale: #{impact_on_scale.round}  Pct: #{pct.round(2)}  rad: #{@ball.direction.round(2)}  speed: #{@ball.speed}")
-        #info("#{impact_on_scale.round}/#{scale_length}:  #{pct.round(2)}%")
+        # info("Scale length: #{scale_length}  Impact on Scale: #{impact_on_scale.round}  Pct: #{pct.round(2)}  rad: #{@ball.direction.round(2)}  speed: #{@ball.speed}")
+        # info("#{impact_on_scale.round}/#{scale_length}:  #{pct.round(2)}%")
         @ball.last_element_bounce = @char.object_id
         # if @progress_bar.is_done
         #     @update_fire_after_next_player_hit = true 
@@ -428,6 +430,7 @@ class Scroller < Widget
             w = objects[0]
             if w.object_id == @ball.last_element_bounce
                 # Don't bounce off the same element twice
+				puts "NOT bouncing off #{w}"
                 w = nil 
             end
         else 
@@ -435,21 +438,36 @@ class Scroller < Widget
             closest_widget = nil 
             closest_distance = 100   # some large number
             objects.each do |candidate_widget| 
+				next if candidate_widget == @ball
                 d = @ball.distance_between_center_mass(candidate_widget)
-                debug("Comparing #{d} with #{closest_distance}. Candidate #{candidate_widget.object_id}  last bounce: #{@ball.last_element_bounce}")
+                # puts "Comparing #{d} with #{closest_distance}. Candidate #{candidate_widget} (#{candidate_widget.object_id})  last bounce: #{@ball.last_element_bounce}"
                 if d < closest_distance and candidate_widget.object_id != @ball.last_element_bounce
                     closest_distance = d 
                     closest_widget = candidate_widget 
                 end 
             end 
             w = closest_widget
+			# if w.nil?
+			# 	objs = objects.map { |oo| oo.class }
+			# 	puts "ONLY SELF COLLISION #{objs}"
+			# end
         end
         if w.nil?
             return true
         end
 
-        puts "collision detection'"
-        puts "Reaction #{w.interaction_results} with widget #{w}"
+        # puts "collision detection'"
+		# if w.class == Ballrag
+		# 	puts "BALLRAG Reaction #{w.interaction_results} with widget #{w}"
+		if !defined?(w.interaction_results)
+			# puts "  WEIRD Reaction with widget #{w}"
+			return
+		elsif w.interaction_results.length == 0
+			# puts "  EMPTY Reaction #{w.interaction_results} with widget #{w}"
+			return
+		else
+			puts "        Reaction #{w.interaction_results} with widget #{w}"
+		end
 
 
 
@@ -457,7 +475,8 @@ class Scroller < Widget
         @ball.last_element_bounce = w.object_id
 
         if w.interaction_results.include? RDIA_REACT_STOP 
-            @ball.stop_move
+            # @ball.stop_move
+			square_bounce(w)
         end
 
         if w.interaction_results.include? RDIA_REACT_LOSE 
