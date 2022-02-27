@@ -41,6 +41,7 @@ class WorldMap
         @yellow_dot = @tileset[18]
         @green_dot = @tileset[19]
         @fire_transition_tile = @tileset[66]
+        @goal_area = @tileset[37]
 
         @red_wall_se = @diagonal_tileset[0]
         @red_wall_sw = @diagonal_tileset[7]
@@ -90,6 +91,7 @@ class WorldMap
                     img = Block.new(@b4) if char == "c"
                     img = Block.new(@b5) if char == "a"
 
+                    img = GoalArea.new(@goal_area) if char == "E"
 
                 end
                 

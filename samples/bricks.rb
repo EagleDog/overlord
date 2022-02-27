@@ -48,20 +48,27 @@ class BricksDisplay < Widget
         
         #add_child(Widget.new(260, 40, 500, 55))
         add_text("Fire", 540, 46)
-        @progress_bar = ProgressBar.new(600, 52, 180, 10, {ARG_DELAY => 6,
-                                                           ARG_PROGRESS_AMOUNT => 0.01,
-                                                           ARG_THEME => WadsNatureTheme.new})
+        @progress_bar = ProgressBar.new(600, 
+                        52, 180, 10, {ARG_DELAY => 6,
+                        ARG_PROGRESS_AMOUNT => 0.01,
+                        ARG_THEME => WadsNatureTheme.new})
         add_child(@progress_bar)
         add_text("Speed", 524, 70)
-        @speedometer = ProgressBar.new(600, 76, 180, 10, {ARG_THEME => WadsPurpleTheme.new})
+        @speedometer = ProgressBar.new(600, 
+                        76, 180, 10, 
+                        {ARG_THEME => WadsPurpleTheme.new})
         add_child(@speedometer)
 
         pause_game
 
-        add_overlay(GameMessageOverlay.new("Welcome to Ruby Brickland", "welcome"))
+        add_overlay(GameMessageOverlay.new(
+                        "Welcome to Ruby Brickland", 
+                        "welcome"))
 
-        @tileset = Gosu::Image.load_tiles("../media/basictiles.png", 16, 16, tileable: true)
-        @diagonal_tileset = Gosu::Image.load_tiles("../media/diagonaltiles.png", 16, 16, tileable: true)
+        @tileset = Gosu::Image.load_tiles("../media/basictiles.png", 
+                                            16, 16, tileable: true)
+        @diagonal_tileset = Gosu::Image.load_tiles("../media/diagonaltiles.png", 
+                                            16, 16, tileable: true)
         @red_wall_se = @diagonal_tileset[0]
         @red_wall_sw = @diagonal_tileset[7]
         @red_wall_nw = @diagonal_tileset[13]

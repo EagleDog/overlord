@@ -13,7 +13,7 @@ class Scroller < Widget
         set_layout(LAYOUT_HEADER_CONTENT)
         #set_theme(WadsDarkRedBrownTheme.new)
         disable_border
-        @pause = true
+        @pause = false
         @game_mode = RDIA_MODE_START
         @score = 0
         @level = 1
@@ -85,7 +85,7 @@ class Scroller < Widget
 
     def load_map    # LOAD MAP             # LOAD_MAP  __________________
 
-        @worldmap.create_board(File.readlines("maps/maps/a3.txt"))
+        @worldmap.create_board(File.readlines("maps/maps/a1.txt"))
 
         add_child(@grid)                    #        ____________________
     end
@@ -95,6 +95,7 @@ class Scroller < Widget
     #   HANDLE_UPDATE              HANDLE_UPDATE   HANDLE_UPDATE
     #
     def handle_update update_count, mouse_x, mouse_y
+        return if @pause
         ball_logic
         move_camera
         collision_detection(children)
@@ -121,14 +122,14 @@ class Scroller < Widget
         @mob6 = Mob.new("media/sprites/girl.png")
         @mob7 = Mob.new("media/sprites/skeleton.png")
         @mob8 = Mob.new("media/sprites/spider.png")
-        @mob1.set_absolute_position(250, 300)
-        @mob2.set_absolute_position(300, 300)
-        @mob3.set_absolute_position(350, 300)
-        @mob4.set_absolute_position(400, 300)
-        @mob5.set_absolute_position(450, 300)
-        @mob6.set_absolute_position(500, 300)
-        @mob7.set_absolute_position(550, 300)
-        @mob8.set_absolute_position(600, 300)
+        @mob1.set_absolute_position(250, 380)
+        @mob2.set_absolute_position(300, 380)
+        @mob3.set_absolute_position(350, 380)
+        @mob4.set_absolute_position(400, 380)
+        @mob5.set_absolute_position(450, 380)
+        @mob6.set_absolute_position(500, 380)
+        @mob7.set_absolute_position(550, 380)
+        @mob8.set_absolute_position(600, 380)
         add_child(@mob1)
         add_child(@mob2)
         add_child(@mob3)
@@ -140,7 +141,10 @@ class Scroller < Widget
     end
 
 
-    def draw                       #  DRAW   DRAW   DRAW   DRAW   DRAW   DRAW
+    def render   # RENDER   # RENDER   # RENDER   RENDER   RENDER   DRAW   DRAW   DRAW
+    end
+
+    def draw   # DRAW   # DRAW   #  DRAW   DRAW   DRAW   DRAW   DRAW   DRAW
         if @show_border
             draw_border
         end
@@ -210,19 +214,6 @@ class Scroller < Widget
         end
     end
 
-
-     def load_sounds
-         @beep0 = Gosu::Sample.new('media/sounds/beep0.ogg')
-         @chime = Gosu::Sample.new('media/sounds/chime.ogg')
-         @click_low = Gosu::Sample.new('media/sounds/click_low.ogg')
-     end
-
-     #   PLAY_SOUNDS                     # PLAY_SOUNDS    PLAY_SOUNDS   PLAY_SOUNDS
-     def play_beep0;    @beep0.play;  end
-     def play_chime;    @chime.play;   end
-     def play_click_low; @click_low.play;  end
-
-
     def action_map(id)
         return 'left' if id == Gosu::KbA or id == Gosu::KbLeft
         return 'right' if id == Gosu::KbD or id == Gosu::KbRight
@@ -278,15 +269,25 @@ class Scroller < Widget
         # @bindings.handle_key_press(id, mouse_x, mouse_y)
     end
 
+
+     def load_sounds
+         @beep0 = Gosu::Sample.new('media/sounds/beep0.ogg')
+         @chime = Gosu::Sample.new('media/sounds/chime.ogg')
+         @click_low = Gosu::Sample.new('media/sounds/click_low.ogg')
+     end
+
+     #   PLAY_SOUNDS                     # PLAY_SOUNDS    PLAY_SOUNDS   PLAY_SOUNDS
+     def play_beep0;    @beep0.play;  end
+     def play_chime;    @chime.play;   end
+     def play_click_low; @click_low.play;  end
+
+
     def handle_key_up(id, mouse_x, mouse_y)
 #        @bindings.handle_key_up(id, mouse_x, mouse_y)
         if id == Gosu::KbA or id == Gosu::KbD or id == Gosu::KbW or id == Gosu::KbS or
            id == Gosu::KbLeft or id == Gosu::KbRight or id == Gosu::KbUp or id == Gosu::KbDown
-
             @char.stop_move
-
             puts "key up"
-
         end
     end
 
@@ -391,9 +392,30 @@ class Scroller < Widget
         # end
     end
 
+    def tilt 
+        r = ((rand(10) * 0.01) - 0.05) * 20
+        @ball.direction = @ball.direction + r
+    end
+
+    def pause_game          # PAUSE
+        if @pause 
+            return 
+        end 
+        @pause = true 
+#        @progress_bar.stop
+    end 
+
+    def restart_game        # RESTART
+        @pause = false 
+#        @progress_bar.start
+    end 
 
 
 
+    ###########################
+    #                         #
+    #   COLLISION_DETECTION   #
+    #                         #
     def collision_detection(objects)      #  INTERACT     INTERACT
         if objects.size == 1
             w = objects[0]
@@ -470,7 +492,4 @@ class Scroller < Widget
     end
 
 
-
-
-
-end
+end ### end class Scroller ###
