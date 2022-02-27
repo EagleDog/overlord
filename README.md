@@ -1,24 +1,23 @@
 
 # Overlord
 
-## Upcoming Features
+## Installation
 ```
- - Sound effect mapping.
- - Restart Game.
- - Different Levels....
- -
- - Lose Screen.                         CHECK
- - Start Screen.                        CHECK
- - End Screen.                          CHECK
- - Mob bouncing.                        CHECK
- - AI Mobs.                             CHECK
- - Add beep sounds.                     CHECK
- - Create Ball object.                  CHECK
- - Push/Roll/Kick Ball around screen.   CHECK
- - Create AI Mob Units to roam map.     CHECK
- - Add Pushable Blocks.
- - Add Button Tiles.
+git clone https://github.com/EagleDog/overlord.git
+cd overlord
+bundle install
+ruby overlord.rb
 ```
+
+## Instructions
+
+Movement:
+```
+A/S/D/W  ----  move
+Arrows   ----  move
+```
+
+
 ## Class Mapping
 ```
    o wads ----  [ widgets ]
@@ -124,21 +123,25 @@
                BorderLayout ]
 ```
 
-## Installation
+## Old To Do List
 ```
-git clone https://github.com/EagleDog/overlord.git
-cd overlord
-bundle install
-ruby overlord.rb
+ - Sound effect mapping.
+ - Restart Game.
+ - Different Levels....
+ -
+ - Lose Screen.                         CHECK
+ - Start Screen.                        CHECK
+ - End Screen.                          CHECK
+ - Mob bouncing.                        CHECK
+ - AI Mobs.                             CHECK
+ - Add beep sounds.                     CHECK
+ - Create Ball object.                  CHECK
+ - Push/Roll/Kick Ball around screen.   CHECK
+ - Create AI Mob Units to roam map.     CHECK
+ - Add Pushable Blocks.
+ - Add Button Tiles.
 ```
 
-## Instructions
-
-Movement:
-```
-A/S/D/W  ----  move
-Arrows   ----  move
-```
 
 ## Credits
 Credit to Lanea Zimmerman for tiles artwork.
