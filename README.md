@@ -4,6 +4,7 @@
 ## Upcoming Features
 ```
  - Sound effect mapping.
+ - Restart Game.
  - Different Levels....
  -
  - Lose Screen.                         CHECK
