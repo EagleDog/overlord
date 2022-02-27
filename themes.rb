@@ -1,4 +1,20 @@
 
+class OverTheme < GuiTheme
+    def initialize
+        super(COLOR_WHITE,                # text color
+              COLOR_HEADER_BRIGHT_BLUE,   # graphic elements
+              COLOR_BORDER_BLUE,          # border color
+              COLOR_BLACK,                # background
+              COLOR_LIGHT_GRAY,           # selected item
+              true,                       # use icons
+              # Gosu::Font.new(40,  :name => "TimesNewRoman"),   # regular font
+              # Gosu::Font.new(50,  :name => "Consolas") )  # large font
+              Gosu::Font.new(30, {:name => "media/MutatorSans.ttf"}),  # regular font
+              Gosu::Font.new(80, {:name => "media/MutatorSans.ttf"}))  # large font
+    end
+
+end
+
 class BricksTheme < GuiTheme
     def initialize
         super(COLOR_WHITE,                # text color
@@ -49,5 +65,5 @@ def you_win_content
     Nice work.
     HEREDOC
 end
-WadsConfig.instance.set_current_theme(BricksTheme.new)
+WadsConfig.instance.set_current_theme(OverTheme.new)
 

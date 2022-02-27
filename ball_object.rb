@@ -11,13 +11,15 @@ class BallObject < ImageWidget
 
 
     def initialize(image, args = {})
-        super(0, 0, image)
-        @last_x = 0 
-        @last_y = 0
+        super(20, 20, image)
+        @last_x = 20 
+        @last_y = 20
         @object_id = SecureRandom.uuid[-6..-1]
         init_direction_and_speed
         @can_move = true  # Set to false if this is a wall or other immovable object
         @max_speed = 20
+
+        @accel_amount = 0.5
 
     end
 
@@ -41,8 +43,8 @@ class BallObject < ImageWidget
 
     def init_direction_and_speed 
         @direction = DEG_0
-        @acceleration = 0
-        @speed = 0
+        @acceleration = 2
+        @speed = 2
     end
 
     def is_stopped 
@@ -54,7 +56,7 @@ class BallObject < ImageWidget
 
     def speed_up 
         if @acceleration < 4
-            @acceleration = @acceleration + 0.1
+            @acceleration = @acceleration + @accel_amount
         end
         @speed = @speed + @acceleration
         if @speed > @max_speed
@@ -64,7 +66,7 @@ class BallObject < ImageWidget
 
     def slow_down 
         if @acceleration > 0
-            @acceleration = @acceleration - 0.1
+            @acceleration = @acceleration + @accel_amount
         end
         @speed = @speed - @acceleration
         if @speed < 0
@@ -87,14 +89,14 @@ class BallObject < ImageWidget
 
     def start_move_right
         start_move_in_direction(DEG_0)
-        @acceleration = 0
-        @speed = 0
+        @acceleration = 2
+        @speed = 2
     end
 
     def start_move_left
         start_move_in_direction(DEG_180)
-        @acceleration = 0
-        @speed = 0
+        @acceleration = 2
+        @speed = 2
     end
 
     def proposed_move

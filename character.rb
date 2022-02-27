@@ -34,8 +34,10 @@ class Character < GameObject
     end 
 
     def kick
+        puts rand(4)
         puts "kick"
-        @chirp1.play
+        @slice.play
+#        @chirp1.play
     end
 
     def stop_move 
@@ -50,8 +52,8 @@ class Character < GameObject
         start_move_in_direction(DEG_0)
         @acceleration = 0
         @speed = 1
-#        @click1.play
-        @typing5.play
+        @click5.play
+#        @typing5.play
     end
 
     def start_move_left
@@ -59,8 +61,8 @@ class Character < GameObject
         start_move_in_direction(DEG_180)
         @acceleration = 0
         @speed = 1
-#        @click1.play
-        @typing5.play
+        @click5.play
+#        @typing5.play
     end 
 
     def start_move_up
@@ -68,8 +70,8 @@ class Character < GameObject
         start_move_in_direction(DEG_90)
         @acceleration = 0
         @speed = 1
-#        @click1.play
-        @typing4.play
+        @click5.play
+        # @typing4.play
     end
 
     def start_move_down
@@ -77,8 +79,8 @@ class Character < GameObject
         start_move_in_direction(DEG_270)
         @acceleration = 0
         @speed = 1
-#        @click1.play
-        @typing4.play
+        @click5.play
+        # @typing4.play
     end
 
     def internal_move(grid) 
@@ -129,6 +131,10 @@ class Character < GameObject
     end
 
     def load_sounds
+        @slice = Gosu::Sample.new('media/sfx/slice.ogg')
+        @power_up = Gosu::Sample.new('media/sfx/power_up.ogg')
+        @power_down = Gosu::Sample.new('media/sfx/power_down.ogg')
+
         @beep = Gosu::Sample.new('media/sounds/beep.ogg')
         @chime = Gosu::Sample.new('media/sounds/chime.ogg')
         @explosion = Gosu::Sample.new('media/sounds/explosion.ogg')
@@ -139,37 +145,61 @@ class Character < GameObject
         @typing5 = Gosu::Sample.new('media/sounds/typing5.ogg')
         @typing6 = Gosu::Sample.new('media/sounds/typing6.ogg')
         @typing7 = Gosu::Sample.new('media/sounds/typing7.ogg')
-        @click1= Gosu::Sample.new('media/sounds/click.ogg')
-        @click2 = Gosu::Sample.new('media/sounds/click2.ogg')
+        @click1 = Gosu::Sample.new('media/sounds/click.ogg')
+        # @click2 deleted
         @click3 = Gosu::Sample.new('media/sounds/rasp_click.ogg')
         @click4 = Gosu::Sample.new('media/sounds/rasp_click2.ogg')
         @click5 = Gosu::Sample.new('media/sounds/rasp_click3.ogg')
 
+        @click_low = Gosu::Sample.new('media/sounds/click_low.ogg')
+        @click_high = Gosu::Sample.new('media/sounds/click_high.ogg')
+
+        @fwhick = Gosu::Sample.new('media/sounds/fwhick.ogg')
+        @kerchunk = Gosu::Sample.new('media/sounds/kerchunk.ogg')
+        @bubble = Gosu::Sample.new('media/sounds/bubble.mp3')
+
         @beep1 = Gosu::Sample.new('media/beeps/beep1.ogg')
         @beep2 = Gosu::Sample.new('media/beeps/beep2.ogg')
-        @beep3 = Gosu::Sample.new('media/beeps/beep3.ogg')
-        @beep4 = Gosu::Sample.new('media/beeps/beep4.ogg')
+        # @beep3 deleted
+        # @beep4 deleted
         @beep5 = Gosu::Sample.new('media/beeps/beep5.ogg')
         @beep6 = Gosu::Sample.new('media/beeps/beep6.ogg')
         @beep7 = Gosu::Sample.new('media/beeps/beep7.ogg')
 
         @chirp1 = Gosu::Sample.new('media/beeps/chirp1.ogg')
-        @chirp2 = Gosu::Sample.new('media/beeps/chirp2.ogg')
+        # @chirp2 deleted
+        @zap1 = Gosu::Sample.new('media/beeps/zap1.ogg')
+        @zap2 = Gosu::Sample.new('media/beeps/zap2.ogg')
 
 
     end
 
-    def press_z; @typing5.play; end
-    def press_y; @typing5.play; end
-    def press_f; @typing5.play; end
 
-    def press_q; @typing5.play; end
-    def press_e; @typing5.play; end
-    def press_r; @typing5.play; end
-    def press_t; @typing5.play; end
-    def press_x; @typing5.play; end
-    def press_c; @typing5.play; end
-    def press_v; @typing5.play; end
+    def press_q; @chime.play; end
+    def press_e; @chirp1.play; end
+    def press_r; @beep5.play; end
+    def press_t; @beep6.play; end
+    def press_y; @beep7.play; end
+
+    def press_z; @click_low.play; end
+    def press_x; @click_low.play; end
+    def press_c; @click_low.play; end
+    def press_v; @click_low.play; end
+    def press_b; @kerchunk.play; end
+    def press_n; @fwhick.play; end
+    def press_m; @fwhick.play; end
+
+    def press_u; @power_down.play; end
+    def press_i; @power_down.play; end
+    def press_o; @power_up.play; end
+    def press_p; @power_up.play; end
+
+    def press_f; @click_high.play; end
+    def press_g; @click_high.play; end
+    def press_h; @click_high.play; end
+    def press_j; @zap1.play; end
+    def press_k; @zap2.play; end
+    def press_l; @zap2.play; end
 
 
 end 

@@ -17,7 +17,8 @@
 #
 #
 #
-#         sound quality check
+#
+#            Last Day 1
 #
 #       Gosu Game Jam Feb 2022 
 #

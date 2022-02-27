@@ -55,8 +55,8 @@ class Scroller < Widget
                                          { ARG_TEXT_ALIGN => TEXT_ALIGN_CENTER,
                                            ARG_USE_LARGE_FONT => true})
         subheader_panel = header_panel.get_layout.add_vertical_panel({ARG_LAYOUT => LAYOUT_EAST_WEST,
-                                                                      ARG_DESIRED_WIDTH => GAME_WIDTH})
-        subheader_panel.disable_border
+                                                                      ARG_DESIRED_WIDTH => GAME_WIDTH - 100})
+#        subheader_panel.disable_border
         west_panel = subheader_panel.add_panel(SECTION_WEST)
         west_panel.get_layout.add_text("Score")
         @score_text = west_panel.get_layout.add_text("#{@score}")
@@ -67,23 +67,6 @@ class Scroller < Widget
                                                      {ARG_TEXT_ALIGN => TEXT_ALIGN_RIGHT})
     end
 
-    def load_mobs                          # LOAD_MOBS
-        @mob1 = Mob.new("media/sprites/skeleton.png")
-        @mob2 = Mob.new("media/sprites/blob.png")
-        @mob3 = Mob.new("media/sprites/girl.png")
-        @mob4 = Mob.new("media/sprites/spider.png")
-        @mob5 = Mob.new("media/sprites/ghoul.png")
-        @mob1.set_absolute_position(250, 300)
-        @mob2.set_absolute_position(300, 300)
-        @mob3.set_absolute_position(350, 300)
-        @mob4.set_absolute_position(400, 300)
-        @mob5.set_absolute_position(450, 300)
-        add_child(@mob1)
-        add_child(@mob2)
-        add_child(@mob3)
-        add_child(@mob4)
-        add_child(@mob5)
-    end
 
     def load_char                          # LOAD_CHAR
         @char = Character.new
@@ -107,26 +90,88 @@ class Scroller < Widget
         add_child(@grid)                    #        ____________________
     end
 
-
-
+    #
+    #
     #   HANDLE_UPDATE              HANDLE_UPDATE   HANDLE_UPDATE
+    #
     def handle_update update_count, mouse_x, mouse_y
         ball_logic
         move_camera
         collision_detection(children)
         move_mobs
     end
-
+    
+    #   MOVE_MOBS                  MOVE_MOBS
     def move_mobs
         @mob1.move_it(@grid)
         @mob2.move_it(@grid)
         @mob3.move_it(@grid)
+        @mob4.move_it(@grid)
+        @mob5.move_it(@grid)
+        @mob6.move_it(@grid)
+        @mob7.move_it(@grid)
+        @mob8.move_it(@grid)
+    end
+    def load_mobs                          # LOAD_MOBS
+        @mob1 = Mob.new("media/sprites/bat.png")
+        @mob2 = Mob.new("media/sprites/blob.png")
+        @mob3 = Mob.new("media/sprites/ghost.png")
+        @mob4 = Mob.new("media/sprites/ghoul.png")
+        @mob5 = Mob.new("media/sprites/ghoul2.png")
+        @mob6 = Mob.new("media/sprites/girl.png")
+        @mob7 = Mob.new("media/sprites/skeleton.png")
+        @mob8 = Mob.new("media/sprites/spider.png")
+        @mob1.set_absolute_position(250, 300)
+        @mob2.set_absolute_position(300, 300)
+        @mob3.set_absolute_position(350, 300)
+        @mob4.set_absolute_position(400, 300)
+        @mob5.set_absolute_position(450, 300)
+        @mob6.set_absolute_position(500, 300)
+        @mob7.set_absolute_position(550, 300)
+        @mob8.set_absolute_position(600, 300)
+        add_child(@mob1)
+        add_child(@mob2)
+        add_child(@mob3)
+        add_child(@mob4)
+        add_child(@mob5)
+        add_child(@mob6)
+        add_child(@mob7)
+        add_child(@mob8)
     end
 
 
+    def draw                       #  DRAW   DRAW   DRAW   DRAW   DRAW   DRAW
+        if @show_border
+            draw_border
+        end
+        @children.each do |child|
+            if child.is_a? GridDisplay or child.is_a? Character or 
+               child.is_a? Ballrag or child.is_a? Mob
+                # skip
+            else
+                child.draw
+            end
+        end
+
+        Gosu.translate(-@camera_x, -@camera_y) do
+            @grid.draw
+            @char.draw
+            @ball.draw
+            @mob1.draw
+            @mob2.draw
+            @mob3.draw
+            @mob4.draw
+            @mob5.draw
+            @mob6.draw
+            @mob7.draw
+            @mob8.draw
+        end
+    end 
+
+    #   MOVE_CAMERA               # MOVE_CAMERA
     def move_camera
         # Scrolling follows char  # @camera_x = [[@char.x - (GAME_WIDTH.to_f / 2), 0].max, @grid.grid_width * 32 - GAME_WIDTH].min
-                                    # @camera_y = [[@char.y - (GAME_HEIGHT.to_f / 2), 0].max, @grid.grid_height * 32 - GAME_HEIGHT].min
+                                  # @camera_y = [[@char.y - (GAME_HEIGHT.to_f / 2), 0].max, @grid.grid_height * 32 - GAME_HEIGHT].min
         if @char.x >= 1050; @camera_x = 1050
         else @camera_x = 0;
         end
@@ -134,8 +179,6 @@ class Scroller < Widget
         if @char.y >= 600; @camera_y = 500
         else @camera_y = 0;
         end
-
-
 
         #puts "#{@char.x}, #{@char.y}    Camera: #{@camera_x}, #{@camera_y}"
     end
@@ -167,69 +210,17 @@ class Scroller < Widget
         end
     end
 
-                                    #  PLAY_SOUNDS    PLAY_SOUNDS   PLAY_SOUNDS
-
-     def play_beep0;    @beep0.play;     end
-     def play_chime;    @chime.play;     end
-    # def play_explosion;  @explosion.play; end
-    # def play_typing4;  @typing4.play; end
-    # def play_typing5;  @typing5.play; end
-    # def play_typing6;  @typing6.play; end
-    # def play_typing7;  @typing7.play; end
-    # def play_typing10; @typing10.play;     end
-     def play_click_low; @click_low.play;     end
 
      def load_sounds
          @beep0 = Gosu::Sample.new('media/sounds/beep0.ogg')
          @chime = Gosu::Sample.new('media/sounds/chime.ogg')
-    #     @explosion = Gosu::Sample.new('media/sounds/explosion.ogg')
-    #     @typing1 = Gosu::Sample.new('media/sounds/typing1.ogg')
-    #     @typing2 = Gosu::Sample.new('media/sounds/typing2.ogg')
-    #     @typing3 = Gosu::Sample.new('media/sounds/typing3.ogg')
-    #     @typing4 = Gosu::Sample.new('media/sounds/typing4.ogg')
-    #     @typing5 = Gosu::Sample.new('media/sounds/typing5.ogg')
-    #     @typing6 = Gosu::Sample.new('media/sounds/typing6.ogg')
-    #     @typing7 = Gosu::Sample.new('media/sounds/typing7.ogg')
-    #     @typing10 = Gosu::Sample.new('media/sounds/typing10.ogg')
-    #     @click1 = Gosu::Sample.new('media/sounds/click.ogg')
-    #     @click2 = Gosu::Sample.new('media/sounds/click2.ogg')
-    #     @click3 = Gosu::Sample.new('media/sounds/rasp_click.ogg')
          @click_low = Gosu::Sample.new('media/sounds/click_low.ogg')
-
      end
 
-
-
-
-
-    def draw                       #  DRAW   DRAW   DRAW   DRAW   DRAW   DRAW
-        if @show_border
-            draw_border
-        end
-        @children.each do |child|
-            if child.is_a? GridDisplay or child.is_a? Character or 
-               child.is_a? Ballrag or child.is_a? Mob
-                # skip
-            else
-                child.draw
-            end
-        end
-
-        Gosu.translate(-@camera_x, -@camera_y) do
-            @grid.draw
-            @char.draw
-            @ball.draw
-            @mob1.draw
-            @mob2.draw
-            @mob3.draw
-            @mob4.draw
-            @mob5.draw
-        end
-    end 
-
-
-
-
+     #   PLAY_SOUNDS                     # PLAY_SOUNDS    PLAY_SOUNDS   PLAY_SOUNDS
+     def play_beep0;    @beep0.play;  end
+     def play_chime;    @chime.play;   end
+     def play_click_low; @click_low.play;  end
 
 
     def action_map(id)
@@ -242,13 +233,13 @@ class Scroller < Widget
     end
 
     def handle_key_held_down(id, mouse_x, mouse_y)
-#        @bindings.handle_key_held_down(id, mouse_x, mouse_y)
         @char.move_left(@grid) if action_map(id) == 'left'
         @char.move_right(@grid) if action_map(id) == 'right'
         @char.move_up(@grid) if action_map(id) == 'up'
         @char.move_down(@grid) if action_map(id) == 'down'
         puts "key down"
-        #puts "#{@char.x}, #{@char.y}    Camera: #{@camera_x}, #{@camera_y}   Tile: #{@grid.tile_at_absolute(@char.x, @char.y)}"
+        # puts "#{@char.x}, #{@char.y}    Camera: #{@camera_x}, #{@camera_y}   Tile: #{@grid.tile_at_absolute(@char.x, @char.y)}"
+        # @bindings.handle_key_held_down(id, mouse_x, mouse_y)
     end
 
     def handle_key_press(id, mouse_x, mouse_y)
@@ -264,16 +255,27 @@ class Scroller < Widget
         @char.press_c if id == Gosu::KbC
         @char.press_v if id == Gosu::KbV
 
+        @char.press_u if id == Gosu::KbU
+        @char.press_i if id == Gosu::KbI
+        @char.press_o if id == Gosu::KbO
+        @char.press_p if id == Gosu::KbP
+        @char.press_g if id == Gosu::KbG
+        @char.press_h if id == Gosu::KbH
+        @char.press_j if id == Gosu::KbJ
+        @char.press_k if id == Gosu::KbK
+        @char.press_l if id == Gosu::KbL
 
+        @char.press_b if id == Gosu::KbB
+        @char.press_n if id == Gosu::KbN
+        @char.press_m if id == Gosu::KbM
 
-#        @bindings.handle_key_press(id, mouse_x, mouse_y)
         @char.start_move_left if action_map(id) == 'left'
         @char.start_move_right if action_map(id) == 'right'
         @char.start_move_up if action_map(id) == 'up'
         @char.start_move_down if action_map(id) == 'down'
         @char.kick if action_map(id) == 'kick'
         puts "key press"
-
+        # @bindings.handle_key_press(id, mouse_x, mouse_y)
     end
 
     def handle_key_up(id, mouse_x, mouse_y)
@@ -289,10 +291,6 @@ class Scroller < Widget
     end
 
 
-
-
-
-
     def intercept_widget_event(result)          #  INTERCEPT    INTERCEPT
         info("We intercepted the event #{result.inspect}")
         info("The overlay widget is #{@overlay_widget}")
@@ -306,8 +304,6 @@ class Scroller < Widget
         end
         result
     end
-
-
 
 
 
@@ -353,11 +349,13 @@ class Scroller < Widget
 
             if gdd == X_DIM
                 @ball.bounce_x
+                @ball.speed = 10
             else 
                 # Right now, if it is not defined, one of the diagonal quadrants
                 # we are bouncing on the y dimension.
                 # Not technically accurate, but probably good enough for now
                 @ball.bounce_y
+                @ball.speed = 10
             end
         end
     end 
@@ -378,6 +376,7 @@ class Scroller < Widget
     end 
 
     def bounce_off_char(proposed_next_x, proposed_next_y)
+        puts "bounce_off_char"
         in_radians = @ball.direction
         cx = @ball.center_x 
         scale_length = @char.width + @ball.width

@@ -18,7 +18,7 @@ class Mob < GameObject
         disable_border
         @scale = 2     # might need this until we can scale the whole game to 2
         @max_speed = 20
-        @speed = 5
+        @speed = 10
         puts args
     end
 
@@ -28,19 +28,20 @@ class Mob < GameObject
     end
 
     def move_it(grid)
-        if choice
-            go_left(grid)
-        elsif choice
-            go_right(grid)
-        elsif choice
-            go_up(grid)
-        else
-            go_down(grid)
+        return if choice(2)
+        return if choice(2)
+        return if choice(2)
+        return if choice(2)
+        return if choice(2)
+        if choice(4);   go_left(grid)
+        elsif choice(3);   go_right(grid)
+        elsif choice(2);   go_up(grid)
+        elsif choice(2);   go_down(grid)
         end
 
     end
 
-    def choice
+    def choice(probability)
         if rand(4) == 1
            return true
         end
@@ -76,33 +77,29 @@ class Mob < GameObject
     def start_move_right
         @img_array = @img_right
         start_move_in_direction(DEG_0)
-        @acceleration = 0
-        @speed = 1
-#        @click.play
+        @acceleration = 1
+        @speed = 2
     end
 
     def start_move_left
         @img_array = @img_left
         start_move_in_direction(DEG_180)
-        @acceleration = 0
+        @acceleration = 1
         @speed = 1
-#        @click.play
     end 
 
     def start_move_up
         @img_array = @img_away
         start_move_in_direction(DEG_90)
-        @acceleration = 0
+        @acceleration = 1
         @speed = 1
-#        @click.play
     end
 
     def start_move_down
         @img_array = @img_towards
         start_move_in_direction(DEG_270)
-        @acceleration = 0
+        @acceleration = 1
         @speed = 1
-#        @click.play
     end
 
     def internal_move(grid) 
