@@ -50,48 +50,4 @@ class OverlayTheme < GuiTheme
     end
 end
 
-def create_overlay_widget
-    InfoBox.new(100, 60, 600, 400,
-                "Overlord Castle", 
-                overlay_content, 
-                { ARG_THEME => OverTheme.new})
-end
-
-def overlay_content
-    <<~HEREDOC
-    Your goal is to clear all of the bricks and dots
-    without letting the ball drop through to the bottom.
-    Hit the 'W' button to get started.
-    HEREDOC
-end
-
-def create_you_lose_widget
-    InfoBox.new(100, 60, 600, 400, 
-                "Sorry, you lost", 
-                you_lose_content, 
-                { ARG_THEME => OverTheme.new})
-end
-
-def you_lose_content
-    <<~HEREDOC
-    Try not to lose.
-    HEREDOC
-end
-
-def create_you_win_widget
-    InfoBox.new(300, 80, 600, 400, 
-                "         Goal Reached", 
-                you_win_content, 
-                { ARG_THEME => OverTheme.new})
-end
-
-def you_win_content
-    <<~HEREDOC
-    
-        You have saved the castle.
-
-        You have saved the world.
-    HEREDOC
-end
-
 # WadsConfig.instance.set_current_theme(OverTheme.new)

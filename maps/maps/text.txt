@@ -1,39 +1,63 @@
-
-
-
-
-.        flashcards
-
 #
 #
 #
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#            Last Day 1
+#            Final Day
 #
 #       Gosu Game Jam Feb 2022 
 #
-#           Live Coverage
-#
 #             Overlord
 #
-#             eagleDog
+#      Continuing Live Coverage
 #          agrotizer 2022
+#             eagleDog
 #
 #
 #
 #
 #
 #
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#                   Game Jam 
+#
+#
+#
+#                dBro's Backend
+#
+#               
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+.        flashcards
 #
 #   $ git status
 #

@@ -19,7 +19,7 @@ class BallObject < ImageWidget
         @can_move = true  # Set to false if this is a wall or other immovable object
         @max_speed = 20
 
-        @accel_amount = 0.5
+        @accel_amount = 2
 
     end
 
@@ -44,7 +44,7 @@ class BallObject < ImageWidget
     def init_direction_and_speed 
         @direction = DEG_0
         @acceleration = 2
-        @speed = 2
+        @speed = 1.3
     end
 
     def is_stopped 
@@ -52,61 +52,59 @@ class BallObject < ImageWidget
     end
 
 
+    # def speed_up 
+    #     if @acceleration < 4
+    #         @acceleration = @acceleration + @accel_amount
+    #     end
+    #     @speed = @speed + @acceleration
+    #     if @speed > @max_speed
+    #         @speed = @max_speed
+    #     end
+    # end 
 
-
-    def speed_up 
-        if @acceleration < 4
-            @acceleration = @acceleration + @accel_amount
-        end
-        @speed = @speed + @acceleration
-        if @speed > @max_speed
-            @speed = @max_speed
-        end
-    end 
-
-    def slow_down 
-        if @acceleration > 0
-            @acceleration = @acceleration + @accel_amount
-        end
-        @speed = @speed - @acceleration
-        if @speed < 0
-            @speed = 0
-        end
-    end 
+    # def slow_down 
+    #     if @acceleration > 0
+    #         @acceleration = @acceleration + @accel_amount
+    #     end
+    #     @speed = @speed - @acceleration
+    #     if @speed < 0
+    #         @speed = 0
+    #     end
+    # end 
 
 
 
 
-    def start_move_in_direction(direction)
-        if direction.is_a? Numeric
-            @direction = direction 
-        else 
-            raise "move_in_direction takes a numeric value in radians"
-        end 
-    end 
+    # def start_move_in_direction(direction)
+    #     if direction.is_a? Numeric
+    #         @direction = direction 
+    #     else 
+    #         raise "move_in_direction takes a numeric value in radians"
+    #     end 
+    # end 
 
 
 
-    def start_move_right
-        start_move_in_direction(DEG_0)
-        @acceleration = 2
-        @speed = 2
-    end
+    # def start_move_right
+    #     start_move_in_direction(DEG_0)
+    #     @acceleration = 2
+    #     @speed = 2
+    # end
 
-    def start_move_left
-        start_move_in_direction(DEG_180)
-        @acceleration = 2
-        @speed = 2
-    end
+    # def start_move_left
+    #     start_move_in_direction(DEG_180)
+    #     @acceleration = 2
+    #     @speed = 2
+    # end
 
     def proposed_move
-        [@x + Math.cos(@direction), @y - Math.sin(@direction)]
+        [@x + Math.cos(@direction) * @speed, @y - Math.sin(@direction) * @speed]
     end
 
-    def stop_move
-        @acceleration = 0
-        @speed = 0
-    end
+    # def stop_move
+    #     @acceleration = 0
+    #     @speed = 0
+    # end
 
 
 
@@ -160,6 +158,7 @@ class BallObject < ImageWidget
         return true if other_object.contains_click(right_edge + delta_x, bottom_edge - 1 + delta_y)
         return true if other_object.contains_click(@x + delta_x, bottom_edge - 1 + delta_y)
         return true if other_object.contains_click(center_x + delta_x, center_y + delta_y)
+        return true if other_object.contains_click(@x, @y)
         return false
     end
 

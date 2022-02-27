@@ -55,6 +55,17 @@ class Scroller < Widget
         load_goal_text
     end 
 
+    def reset_level
+        @score = 0
+        @level = 1
+        @camera_x = 0
+        @camera_y = 0
+        @char.set_absolute_position(500, 150)
+        @ball.init_direction_and_speed
+        @ball.set_absolute_position(150, 200)
+    end
+
+
     def load_goal_text
         @goal_text = add_text("GOAL", 750, 450)
     end
@@ -87,7 +98,7 @@ class Scroller < Widget
 
     def load_ball                          # LOAD_BALL
         @ball = Ballrag.new
-        @ball.speed = 5
+        @ball.speed = 2
         add_child(@ball)
     end
 
@@ -116,15 +127,11 @@ class Scroller < Widget
     
     #   MOVE_MOBS                  MOVE_MOBS
     def move_mobs
-        @mob1.move_it(@grid)
-        @mob2.move_it(@grid)
-        @mob3.move_it(@grid)
-        @mob4.move_it(@grid)
-        @mob5.move_it(@grid)
-        @mob6.move_it(@grid)
-        @mob7.move_it(@grid)
-        @mob8.move_it(@grid)
+        @mobs.each do |mob|
+            mob.move_it(@grid)
+        end
     end
+
     def load_mobs                          # LOAD_MOBS
         @mob1 = Mob.new("media/sprites/bat.png")
         @mob2 = Mob.new("media/sprites/blob.png")
@@ -142,14 +149,11 @@ class Scroller < Widget
         @mob6.set_absolute_position(500, 380)
         @mob7.set_absolute_position(550, 380)
         @mob8.set_absolute_position(600, 380)
-        add_child(@mob1)
-        add_child(@mob2)
-        add_child(@mob3)
-        add_child(@mob4)
-        add_child(@mob5)
-        add_child(@mob6)
-        add_child(@mob7)
-        add_child(@mob8)
+        @mobs = [@mob1, @mob2, @mob3, @mob4,
+                 @mob5, @mob6, @mob7, @mob8 ]
+        @mobs.each do |mob|
+            add_child(mob)
+        end
     end
 
 
@@ -174,15 +178,10 @@ class Scroller < Widget
             @grid.draw
             @char.draw
             @ball.draw
-            @mob1.draw
-            @mob2.draw
-            @mob3.draw
-            @mob4.draw
-            @mob5.draw
-            @mob6.draw
-            @mob7.draw
-            @mob8.draw
             @goal_text.draw
+            @mobs.each do |mob|
+                mob.draw
+            end
         end
     end 
 
@@ -201,34 +200,6 @@ class Scroller < Widget
         #puts "#{@char.x}, #{@char.y}    Camera: #{@camera_x}, #{@camera_y}"
     end
 
-    def ball_logic              #  BALL_LOGIC   BALL_LOGIC  BALL_LOGIC
-        proposed_next_x, proposed_next_y = @ball.proposed_move
-        occupant = @grid.proposed_widget_at(@ball, proposed_next_x, proposed_next_y)
-
-        if occupant.empty?
-
-            if @ball.overlaps(proposed_next_x, proposed_next_y, @char)
-                # puts "ball hit char"
-                # play_chime
-                bounce_off_char(proposed_next_x, proposed_next_y)
-
-            else
-                # puts "bounce other"
-                @ball.set_absolute_position(proposed_next_x, proposed_next_y)
-            end
-
-        else 
-			objs = occupant.map { |oo| oo.class }
-            # puts "Found candidate objects to interact #{objs}"
-            if collision_detection(occupant) #, update_count)
-                # puts "^^^^^ bounce wall or block"
-                @ball.set_absolute_position(proposed_next_x, proposed_next_y) 
-                # play_beep0
-			else
-                # puts "^^^^^ NO GRID BOUNCE ???"
-            end
-        end
-    end
 
     def action_map(id)
         return 'left' if id == Gosu::KbA or id == Gosu::KbLeft
@@ -323,6 +294,42 @@ class Scroller < Widget
     end
 
 
+    def ball_logic              #  BALL_LOGIC   BALL_LOGIC  BALL_LOGIC
+        next_x, next_y = @ball.proposed_move
+        occupant = @grid.proposed_widget_at(@ball, next_x, next_y)
+
+        if occupant.empty?
+
+            @mobs.each do |mob|
+                if @ball.overlaps(next_x, next_y, mob)
+                    bounce_off_char(next_x, next_y)
+                end
+            end
+
+            if @ball.overlaps(next_x, next_y, @char)
+                bounce_off_char(next_x, next_y)
+                @char.kick
+                # puts "ball hit char"
+
+            else
+                # puts "bounce other"
+                @ball.set_absolute_position(next_x, next_y)
+            end
+
+        else 
+            objs = occupant.map { |oo| oo.class }
+            # puts "Found candidate objects to interact #{objs}"
+            if collision_detection(occupant) #, update_count)
+                # puts "^^^^^ bounce wall or block"
+                @ball.set_absolute_position(next_x, next_y) 
+                # play_beep0
+            else
+                # puts "^^^^^ NO GRID BOUNCE ???"
+            end
+        end
+    end
+
+
 
 ######                                  ########
 ######   BOUNCE     BOUNCE   BOUNCE     ########
@@ -340,7 +347,7 @@ class Scroller < Widget
     end
 
     def square_bounce(w)
-        @ball.speed = 40
+        @ball.speed = 5
         if is_bouncing?(w)
             @bouncing = true
             @ball.bounce_y if y_bounce?(w)
@@ -366,13 +373,13 @@ class Scroller < Widget
 
             if gdd == X_DIM
                 @ball.bounce_x
-                @ball.speed = 10
+                @ball.speed = 5
             else 
                 # Right now, if it is not defined, one of the diagonal quadrants
                 # we are bouncing on the y dimension.
                 # Not technically accurate, but probably good enough for now
                 @ball.bounce_y
-                @ball.speed = 10
+                @ball.speed = 5
             end
         end
     end 
@@ -392,7 +399,7 @@ class Scroller < Widget
         end
     end 
 
-    def bounce_off_char(proposed_next_x, proposed_next_y)
+    def bounce_off_char(next_x, next_y)
         # puts "bounce_off_char"
         in_radians = @ball.direction
         cx = @ball.center_x 
@@ -401,13 +408,10 @@ class Scroller < Widget
         pct = impact_on_scale.to_f / scale_length.to_f
 #        @ball.direction = 0.15 + (pct * (Math::PI - 0.3.to_f))
         @ball.direction = rand(360)
-        @ball.speed = 10
+        @ball.speed = 5
         # info("Scale length: #{scale_length}  Impact on Scale: #{impact_on_scale.round}  Pct: #{pct.round(2)}  rad: #{@ball.direction.round(2)}  speed: #{@ball.speed}")
         # info("#{impact_on_scale.round}/#{scale_length}:  #{pct.round(2)}%")
         @ball.last_element_bounce = @char.object_id
-        # if @progress_bar.is_done
-        #     @update_fire_after_next_player_hit = true 
-        # end
     end
 
     def tilt 
@@ -478,22 +482,11 @@ class Scroller < Widget
 			puts "        Reaction #{w.interaction_results} with widget #{w}"
 		end
 
-
-
-
         @ball.last_element_bounce = w.object_id
 
         if w.interaction_results.include? RDIA_REACT_STOP 
             # @ball.stop_move
 			square_bounce(w)
-        end
-
-        if w.interaction_results.include? RDIA_REACT_LOSE 
-            @pause = true
-            @game_mode = RDIA_MODE_END
-            if @overlay_widget.nil?
-                add_overlay(create_you_lose_widget)
-            end
         end
 
         if w.interaction_results.include? RDIA_REACT_BOUNCE 
@@ -504,16 +497,25 @@ class Scroller < Widget
 
         if w.interaction_results.include? RDIA_REACT_CONSUME
             @grid.remove_tile_at_absolute(w.x + 1, w.y + 1)
-        end
-
-        if w.interaction_results.include? RDIA_REACT_GOAL
-            # TODO end this round
+            @char.press_u
+#            tilt
         end
 
         if w.interaction_results.include? RDIA_REACT_SCORE
             @score = @score + w.score
             @score_text.label = "#{@score}"
         end
+
+        if w.interaction_results.include? RDIA_REACT_LOSE 
+            @pause = true
+            @game_mode = RDIA_MODE_END
+            if @overlay_widget.nil?
+                add_overlay(create_you_lose_widget)
+            end
+            reset_level
+            @pause = false
+        end
+
 
         if w.interaction_results.include? RDIA_REACT_GOAL
             @pause = true
@@ -523,6 +525,7 @@ class Scroller < Widget
                 add_overlay(create_you_win_widget)
             end
         end
+
         true
 
     end
