@@ -81,7 +81,7 @@ class Scroller < Widget
     end
 
     def load_goal_text
-        @goal_text = add_text("GOAL", 750, 450)
+        @goal_text = add_text("GOAL", 1350, 900)
     end
 
     def load_panels                     #  LOAD_PANELS    LOAD_PANELS
@@ -307,6 +307,30 @@ class Scroller < Widget
         result
     end
 
+
+
+    def pause_game                     # PAUSE
+#        return if @pause 
+        @pause = true 
+#        @progress_bar.stop
+    end 
+
+    def unpause_game                   # UNPAUSE
+        @pause = false
+        # return if !@pause 
+        # @pause = false if @pause == true
+#        @progress_bar.start
+    end 
+
+    def tilt 
+        r = ((rand(10) * 0.01) - 0.05) # * 20
+        @ball.direction = @ball.direction + r
+        @ball.speed -= 0.2 if @ball.speed > 0
+    end
+
+
+
+
     ##              ##
     #   BALL_LOGIC   #
     def ball_logic              #  BALL_LOGIC   BALL_LOGIC  BALL_LOGIC
@@ -318,12 +342,16 @@ class Scroller < Widget
             @mobs.each do |mob|
                 if @ball.overlaps(next_x, next_y, mob)
                     bounce_off_char(next_x, next_y)
+                    play_chime
+                    @ball.speed = 5
                 end
             end
 
             if @ball.overlaps(next_x, next_y, @char)
                 bounce_off_char(next_x, next_y)
                 @char.kick
+                @ball.speed = 7
+
                 # puts "ball hit char"
 
             else
@@ -362,7 +390,7 @@ class Scroller < Widget
     end
 
     def square_bounce(w)
-        @ball.speed = 4
+        # @ball.speed = 4
         if is_bouncing?(w)
             @bouncing = true
             @ball.bounce_y if y_bounce?(w)
@@ -389,13 +417,13 @@ class Scroller < Widget
 
             if gdd == X_DIM
                 @ball.bounce_x
-                @ball.speed = 3
+                # @ball.speed = 3
             else 
                 # Right now, if it is not defined, one of the diagonal quadrants
                 # we are bouncing on the y dimension.
                 # Not technically accurate, but probably good enough for now
                 @ball.bounce_y
-                @ball.speed = 3
+                # @ball.speed = 3
             end
         end
     end 
@@ -425,7 +453,7 @@ class Scroller < Widget
         pct = impact_on_scale.to_f / scale_length.to_f
 #        @ball.direction = 0.15 + (pct * (Math::PI - 0.3.to_f))
         @ball.direction = rand(360)
-        @ball.speed = 5
+#        @ball.speed = 8
         # info("Scale length: #{scale_length}  " + 
         #      "Impact on Scale: #{impact_on_scale.round}  "+
         #      "Pct: #{pct.round(2)}  rad: #{@ball.direction.round(2)}  "+
@@ -433,25 +461,6 @@ class Scroller < Widget
         # info("#{impact_on_scale.round}/#{scale_length}:  #{pct.round(2)}%")
         @ball.last_element_bounce = @char.object_id
     end
-
-    def tilt 
-        r = ((rand(10) * 0.01) - 0.05) * 20
-        @ball.direction = @ball.direction + r
-    end
-
-    def pause_game                     # PAUSE
-#        return if @pause 
-        @pause = true 
-#        @progress_bar.stop
-    end 
-
-    def unpause_game                   # UNPAUSE
-        @pause = false
-        # return if !@pause 
-        # @pause = false if @pause == true
-#        @progress_bar.start
-    end 
-
 
 
     ###########################
@@ -511,15 +520,14 @@ class Scroller < Widget
 
         if w.interaction_results.include? RDIA_REACT_BOUNCE 
             square_bounce(w)
-        end
-        if w.interaction_results.include? RDIA_REACT_BOUNCE_DIAGONAL
+        elsif w.interaction_results.include? RDIA_REACT_BOUNCE_DIAGONAL
             diagonal_bounce(w)
         end
 
         if w.interaction_results.include? RDIA_REACT_CONSUME
             @grid.remove_tile_at_absolute(w.x + 1, w.y + 1)
             @char.press_u
-        #    tilt
+            tilt
         end
 # SCORE
         if w.interaction_results.include? RDIA_REACT_SCORE

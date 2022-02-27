@@ -42,7 +42,7 @@ class Overlord < RdiaGame
 #        @music = Gosu::Song.new('media/sounds/typing7.ogg')
         $music = Gosu::Song.new('media/adventure.ogg')
         $music.volume = 0.1
-#        $music.play(false)
+        $music.play(false)
     end
 
 
