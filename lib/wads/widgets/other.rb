@@ -236,8 +236,8 @@ module Wads
             if args[ARG_THEME]
                 @gui_theme = args[ARG_THEME]
             end
-            add_text(title, 5, 5)
-            add_document(content, 5, 52, width, height - 52)
+            add_text(title, 25, 10)
+            add_document(content, 25, 62, width, height - 52)
             ok_button = add_button("OK", (@width / 2) - 50, height - 26) do
                 WidgetResult.new(true)
             end
@@ -327,12 +327,18 @@ module Wads
     end 
 
     # __WdigetResult__
-    # A result object returned from handle methods that instructs the parent widget
-    # what to do. A close_widget value of true instructs the recipient to close
-    # either the overlay window or the entire app, based on the context of the receiver.
-    # In the case of a form being submitted, the action may be "OK" and the form_data
-    # contains the information supplied by the user.
-    # WidgetResult is intentionally generic so it can support a wide variety of use cases.
+    # A result object returned from handle 
+    # methods that instructs the parent widget
+    # what to do. A close_widget value of true 
+    # instructs the recipient to close either 
+    # the overlay window or the entire app, 
+    # based on the context of the receiver.
+    # In the case of a form being submitted, 
+    # the action may be "OK" and the form_data
+    # contains the information supplied by the 
+    # user.
+    # WidgetResult is intentionally generic so 
+    # it can support a wide variety of use cases.
     #
     class WidgetResult 
         attr_accessor :close_widget

@@ -4,7 +4,7 @@ class OverTheme < GuiTheme
         super(COLOR_WHITE,                # text color
               COLOR_HEADER_BRIGHT_BLUE,   # graphic elements
               COLOR_BORDER_BLUE,          # border color
-              COLOR_BLACK,                # background
+              COLOR_LIGHT_GRAY,                # background
               COLOR_LIGHT_GRAY,           # selected item
               true,                       # use icons
               # Gosu::Font.new(40,  :name => "TimesNewRoman"),   # regular font
@@ -32,6 +32,22 @@ class BricksTheme < GuiTheme
     end
 end
 
+class OverlayTheme < GuiTheme
+    def initialize
+        super(COLOR_WHITE,                # text color
+              COLOR_HEADER_BRIGHT_BLUE,   # graphic elements
+              COLOR_VERY_LIGHT_BLUE,      # border color
+              COLOR_BLACK,                # background
+              COLOR_LIGHT_GRAY,           # selected item
+              true,                       # use icons
+              Gosu::Font.new(22),  # regular font
+              Gosu::Font.new(38))  # large font
+    end
+
+    def media_path(file)
+        File.join(File.dirname(File.dirname(__FILE__)), 'media', file)
+    end
+end
 
 def create_overlay_widget
     InfoBox.new(100, 60, 600, 400, "Welcome to Ruby Bricks", overlay_content, { ARG_THEME => BricksTheme.new})
@@ -65,5 +81,5 @@ def you_win_content
     Nice work.
     HEREDOC
 end
-WadsConfig.instance.set_current_theme(OverTheme.new)
 
+# WadsConfig.instance.set_current_theme(OverTheme.new)

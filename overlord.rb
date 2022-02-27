@@ -7,6 +7,7 @@ include Wads
 include RdiaGames
 
 require_relative 'bin/pathfinder'
+require_relative 'welcome'
 require_relative 'ball_object'
 require_relative 'objects'
 require_relative 'scroller'

@@ -11,8 +11,10 @@ class Scroller < Widget
     def initialize
         super(0, 0, GAME_WIDTH, GAME_HEIGHT)
         set_layout(LAYOUT_HEADER_CONTENT)
-        #set_theme(WadsDarkRedBrownTheme.new)
-        disable_border
+        set_theme(OverTheme.new)
+#        disable_border
+        enable_border
+        enable_background
         @pause = false
         @game_mode = RDIA_MODE_START
         @score = 0
@@ -20,13 +22,17 @@ class Scroller < Widget
         @camera_x = 0
         @camera_y = 0
 
+        pause_game
+        add_overlay(WelcomeScreen.new(
+                        "Overlord Castle", 
+                        "intro"))
+
+
         # TODO put this back when we are ready 
         # to release, instructions to the user
         # add_overlay(create_overlay_widget)
 
         # initialize
-
-
 
         @grid = GridDisplay.new(0, 0, 16, 80, 38, {ARG_SCALE => 2})
         @worldmap = WorldMap.new(@grid)
@@ -76,6 +82,7 @@ class Scroller < Widget
 
     def load_ball                          # LOAD_BALL
         @ball = Ballrag.new
+        @ball.speed = 5
         add_child(@ball)
     end
 

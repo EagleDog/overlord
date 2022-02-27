@@ -5,13 +5,15 @@ class WelcomeScreen < InfoBox
     def initialize(title, content_id)
         content_file_name = 
             File.join(File.dirname(File.dirname(__FILE__)), 
-            'msgs', "messages_#{content_id}.txt")
+            'overlord', 
+            'msgs', 
+            "messages_#{content_id}.txt")
         if not File.exist?(content_file_name)
             raise "The content file #{content_file_name} does not exist"
         end
         content = File.readlines(content_file_name).join("")
-        super(100, 60, 600, 400, title, content, 
-              { ARG_THEME => OverlayTheme.new})
+        super(300, 150, 600, 400, title, content, 
+              { ARG_THEME => OverTheme.new})
     end
 
     def handle_key_press id, mouse_x, mouse_y
