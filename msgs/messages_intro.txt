@@ -1,11 +1,14 @@
-Press Space Bar to start.
 
-Kick the ball through the
-Castle areas to get it to
-the goal.
+     Get the ball to the goal.
 
 
-     W     
-   A S D       Arrows
+          W     
+        A S D       Arrows
 
-       Space Bar
+              Space
+
+
+
+
+        Press Space to start.
+

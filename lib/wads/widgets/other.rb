@@ -236,9 +236,9 @@ module Wads
             if args[ARG_THEME]
                 @gui_theme = args[ARG_THEME]
             end
-            add_text(title, 25, 10)
-            add_document(content, 25, 62, width, height - 52)
-            ok_button = add_button("OK", (@width / 2) - 50, height - 26) do
+            add_text(title, 25, 40)
+            add_document(content, 25, 70, width, height - 52)
+            ok_button = add_button("OK", (@width / 2) - 50, height - 120) do
                 WidgetResult.new(true)
             end
             ok_button.width = 100

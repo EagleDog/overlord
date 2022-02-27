@@ -3,12 +3,15 @@
 
 ## Upcoming Features
 ```
- - AI Mobs.
+ - Start Screen.
+ - End Screen.
+ - Mob bouncing.
  - 
- - Add beep sounds.
- - Create Ballrag object (@balljack).
- - Push/Roll/Kick Ballrag (@balljack) around screen.
- - Create AI Mob Units to roam map.
+ - AI Mobs.                             CHECK
+ - Add beep sounds.                     CHECK
+ - Create Ball object.                  CHECK
+ - Push/Roll/Kick Ball around screen.   CHECK
+ - Create AI Mob Units to roam map.     CHECK
  - Add Pushable Blocks.
  - Add Button Tiles.
 ```

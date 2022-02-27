@@ -12,7 +12,7 @@ class WelcomeScreen < InfoBox
             raise "The content file #{content_file_name} does not exist"
         end
         content = File.readlines(content_file_name).join("")
-        super(300, 150, 600, 400, title, content, 
+        super(300, 80, 600, 450, title, content, 
               { ARG_THEME => OverTheme.new})
     end
 

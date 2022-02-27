@@ -3,13 +3,14 @@ class OverTheme < GuiTheme
     def initialize
         super(COLOR_WHITE,                # text color
               COLOR_HEADER_BRIGHT_BLUE,   # graphic elements
-              COLOR_BORDER_BLUE,          # border color
+              COLOR_LIGHT_BLACK,          # border color
               COLOR_LIGHT_GRAY,                # background
               COLOR_LIGHT_GRAY,           # selected item
               true,                       # use icons
               # Gosu::Font.new(40,  :name => "TimesNewRoman"),   # regular font
               # Gosu::Font.new(50,  :name => "Consolas") )  # large font
-              Gosu::Font.new(30, {:name => "media/MutatorSans.ttf"}),  # regular font
+              # Gosu::Font.new(80, {:name => "media/MutatorSans.ttf"}))  # large font
+              Gosu::Font.new(30, {:name => "media/CourierNewBold.ttf"}),  # regular font
               Gosu::Font.new(80, {:name => "media/MutatorSans.ttf"}))  # large font
     end
 
@@ -50,7 +51,10 @@ class OverlayTheme < GuiTheme
 end
 
 def create_overlay_widget
-    InfoBox.new(100, 60, 600, 400, "Welcome to Ruby Bricks", overlay_content, { ARG_THEME => BricksTheme.new})
+    InfoBox.new(100, 60, 600, 400,
+                "Overlord Castle", 
+                overlay_content, 
+                { ARG_THEME => OverTheme.new})
 end
 
 def overlay_content
@@ -62,23 +66,31 @@ def overlay_content
 end
 
 def create_you_lose_widget
-    InfoBox.new(100, 60, 600, 400, "Sorry, you lost", you_lose_content, { ARG_THEME => BricksTheme.new})
+    InfoBox.new(100, 60, 600, 400, 
+                "Sorry, you lost", 
+                you_lose_content, 
+                { ARG_THEME => OverTheme.new})
 end
 
 def you_lose_content
     <<~HEREDOC
-    Try not to let the ball fall through next time.
+    Try not to lose.
     HEREDOC
 end
 
 def create_you_win_widget
-    InfoBox.new(100, 60, 600, 400, "You win!", you_win_content, { ARG_THEME => WadsDarkRedBrownTheme.new})
+    InfoBox.new(300, 80, 600, 400, 
+                "         Goal Reached", 
+                you_win_content, 
+                { ARG_THEME => OverTheme.new})
 end
 
 def you_win_content
     <<~HEREDOC
-    You did it. That was amazing!
-    Nice work.
+    
+        You have saved the castle.
+
+        You have saved the world.
     HEREDOC
 end
 

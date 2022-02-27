@@ -24,7 +24,7 @@ class Scroller < Widget
 
         pause_game
         add_overlay(WelcomeScreen.new(
-                        "Overlord Castle", 
+                        "         Overlord Castle", 
                         "intro"))
 
 
@@ -52,12 +52,17 @@ class Scroller < Widget
         load_sounds
 
         @bouncing = false
+        load_goal_text
     end 
+
+    def load_goal_text
+        @goal_text = add_text("GOAL", 750, 450)
+    end
 
 
     def load_panels                     #  LOAD_PANELS    LOAD_PANELS
         header_panel = add_panel(SECTION_NORTH)
-        header_panel.get_layout.add_text("OVERLORD",
+        header_panel.get_layout.add_text("OVERLORD    ",
                                          { ARG_TEXT_ALIGN => TEXT_ALIGN_CENTER,
                                            ARG_USE_LARGE_FONT => true})
         subheader_panel = header_panel.get_layout.add_vertical_panel({ARG_LAYOUT => LAYOUT_EAST_WEST,
@@ -148,7 +153,7 @@ class Scroller < Widget
     end
 
 
-    def render   # RENDER   # RENDER   # RENDER   RENDER   RENDER   DRAW   DRAW   DRAW
+    def render   # RENDER   # RENDER   # RENDER   RENDER   RENDER   RENDER
     end
 
     def draw   # DRAW   # DRAW   #  DRAW   DRAW   DRAW   DRAW   DRAW   DRAW
@@ -157,7 +162,8 @@ class Scroller < Widget
         end
         @children.each do |child|
             if child.is_a? GridDisplay or child.is_a? Character or 
-               child.is_a? Ballrag or child.is_a? Mob
+               child.is_a? Ballrag or child.is_a? Mob or
+               child == @goal_text
                 # skip
             else
                 child.draw
@@ -176,6 +182,7 @@ class Scroller < Widget
             @mob6.draw
             @mob7.draw
             @mob8.draw
+            @goal_text.draw
         end
     end 
 
@@ -392,7 +399,9 @@ class Scroller < Widget
         scale_length = @char.width + @ball.width
         impact_on_scale = ((@char.right_edge + (@ball.width / 2)) - cx) + 0.25
         pct = impact_on_scale.to_f / scale_length.to_f
-        @ball.direction = 0.15 + (pct * (Math::PI - 0.3.to_f))
+#        @ball.direction = 0.15 + (pct * (Math::PI - 0.3.to_f))
+        @ball.direction = rand(360)
+        @ball.speed = 10
         # info("Scale length: #{scale_length}  Impact on Scale: #{impact_on_scale.round}  Pct: #{pct.round(2)}  rad: #{@ball.direction.round(2)}  speed: #{@ball.speed}")
         # info("#{impact_on_scale.round}/#{scale_length}:  #{pct.round(2)}%")
         @ball.last_element_bounce = @char.object_id
@@ -510,6 +519,7 @@ class Scroller < Widget
             @pause = true
             @game_mode = RDIA_MODE_END
             if @overlay_widget.nil?
+                $music.play(false)
                 add_overlay(create_you_win_widget)
             end
         end
