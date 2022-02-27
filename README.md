@@ -3,11 +3,13 @@
 
 ## Upcoming Features
 ```
- - Start Screen.
- - End Screen.
  - Sound effect mapping.
- - Mob bouncing.
- - 
+ - Different Levels....
+ -
+ - Lose Screen.                         CHECK
+ - Start Screen.                        CHECK
+ - End Screen.                          CHECK
+ - Mob bouncing.                        CHECK
  - AI Mobs.                             CHECK
  - Add beep sounds.                     CHECK
  - Create Ball object.                  CHECK
