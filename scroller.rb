@@ -275,37 +275,29 @@ class Scroller < Widget
          @beep0 = Gosu::Sample.new('media/sounds/beep0.ogg')
          @chime = Gosu::Sample.new('media/sounds/chime.ogg')
          @click_low = Gosu::Sample.new('media/sounds/click_low.ogg')
+         @slice = Gosu::Sample.new('media/sfx/slice.ogg')
+         @zap2 = Gosu::Sample.new('media/beeps/zap2.ogg')
      end
 
      #   PLAY_SOUNDS                     # PLAY_SOUNDS    PLAY_SOUNDS   PLAY_SOUNDS
-     def play_beep0;    @beep0.play;  end
-     def play_chime;    @chime.play;   end
-     def play_click; @click_low.play;  end
+     def play_beep0;  @beep0.play;  end
+     def play_chime;  @chime.play;   end
+     def play_click;  @click_low.play;  end
+     def play_slice;  @slice.play;  end
+     def play_zap2;  @zap2.play;  end
 
 
     def handle_key_up(id, mouse_x, mouse_y)
 #        @bindings.handle_key_up(id, mouse_x, mouse_y)
-        if id == Gosu::KbA or id == Gosu::KbD or id == Gosu::KbW or id == Gosu::KbS or
-           id == Gosu::KbLeft or id == Gosu::KbRight or id == Gosu::KbUp or id == Gosu::KbDown
+        if id == Gosu::KbA or id == Gosu::KbD or 
+           id == Gosu::KbW or id == Gosu::KbS or 
+           id == Gosu::KbLeft or id == Gosu::KbRight or 
+           id == Gosu::KbUp or id == Gosu::KbDown
             @char.stop_move
             # puts "key up"
         end
     end
 
-
-    def intercept_widget_event(result)          #  INTERCEPT    INTERCEPT
-        info("We intercepted the event #{result.inspect}")
-        info("The overlay widget is #{@overlay_widget}")
-        if result.close_widget 
-            if @game_mode == RDIA_MODE_START
-                @game_mode = RDIA_MODE_PLAY
-                @pause = false 
-            elsif @game_mode == RDIA_MODE_END
-                @game_mode = RDIA_MODE_START
-            end
-        end
-        result
-    end
 
 
 
@@ -325,7 +317,7 @@ class Scroller < Widget
     def tilt 
         r = ((rand(10) * 0.01) - 0.05) # * 20
         @ball.direction = @ball.direction + r
-        @ball.speed -= 0.2 if @ball.speed > 0
+        @ball.speed -= 0.4 if @ball.speed > 0
     end
 
 
@@ -339,18 +331,18 @@ class Scroller < Widget
 
         if occupant.empty?
 
-            @mobs.each do |mob|
+            @mobs.each do |mob|         # bounce mob  # bounce mob  # bounce mob
                 if @ball.overlaps(next_x, next_y, mob)
-                    bounce_off_char(next_x, next_y)
+                    bounce_char(next_x, next_y)
                     play_chime
-                    @ball.speed = 5
+                    @ball.speed = 4
                 end
             end
 
             if @ball.overlaps(next_x, next_y, @char)
-                bounce_off_char(next_x, next_y)
+                bounce_char(next_x, next_y)   # bounce char  # bounce char  # bounce char
                 @char.kick
-                @ball.speed = 7
+                @ball.speed = 6
 
                 # puts "ball hit char"
 
@@ -383,10 +375,12 @@ class Scroller < Widget
     end
 
     def x_bounce?(w)
-        true if @ball.center_y >= w.y and @ball.center_y <= w.bottom_edge
+        true if @ball.center_y >= w.y and 
+                @ball.center_y <= w.bottom_edge
     end
     def y_bounce?(w)
-        true if @ball.center_x >= w.x and @ball.center_x <= w.right_edge
+        true if @ball.center_x >= w.x and 
+                @ball.center_x <= w.right_edge
     end
 
     def square_bounce(w)
@@ -398,7 +392,8 @@ class Scroller < Widget
             @ball.bounce_x if x_bounce?(w)
         #    puts "bounce_x" if x_bounce?(w)
         else 
-            info("wall doesnt know how to bounce ball. #{w.x}  #{@ball.center_x}  #{w.right_edge}")
+            info("wall doesnt know how to bounce ball. " + 
+                 "#{w.x}  #{@ball.center_x}  #{w.right_edge}")
 #            play_chime
             quad = @ball.relative_quad(w)
 #            info("Going to bounce off relative quad #{quad}")
@@ -444,8 +439,8 @@ class Scroller < Widget
         end
     end 
 
-    def bounce_off_char(next_x, next_y)
-        # puts "bounce_off_char"
+    def bounce_char(next_x, next_y)
+        # puts "bounce_char"
         in_radians = @ball.direction
         cx = @ball.center_x 
         scale_length = @char.width + @ball.width
@@ -461,6 +456,23 @@ class Scroller < Widget
         # info("#{impact_on_scale.round}/#{scale_length}:  #{pct.round(2)}%")
         @ball.last_element_bounce = @char.object_id
     end
+
+
+    #   INTERCEPT_WIDGET_EVENT                  # INTERCEPT   # INTERCEPT          
+    def intercept_widget_event(result)
+        info("We intercepted the event #{result.inspect}")
+        info("The overlay widget is #{@overlay_widget}")
+        if result.close_widget 
+            if @game_mode == RDIA_MODE_START
+                @game_mode = RDIA_MODE_PLAY
+                @pause = false 
+            elsif @game_mode == RDIA_MODE_END
+                @game_mode = RDIA_MODE_START
+            end
+        end
+        result
+    end
+
 
 
     ###########################
@@ -538,16 +550,18 @@ class Scroller < Widget
         if w.interaction_results.include? RDIA_REACT_LOSE 
             @pause = true
             @game_mode = RDIA_MODE_END
+            play_slice
             if @overlay_widget.nil?
                 add_overlay(create_you_lose_widget)
             end
-            restart_level
+#            restart_level
         end
 
 # GOAL
         if w.interaction_results.include? RDIA_REACT_GOAL
             @pause = true
             @game_mode = RDIA_MODE_END
+            play_zap2
             if @overlay_widget.nil?
                 $music.play(false)
                 add_overlay(create_you_win_widget)

@@ -89,9 +89,9 @@ end
 def you_win_content
     <<~HEREDOC
 
-        You have saved the castle.
+        You saved the castle.
 
-        You have saved the world.
+        You saved the world.
     HEREDOC
 end
 

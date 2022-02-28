@@ -8,7 +8,8 @@ cd overlord
 bundle install
 ruby overlord.rb
 ```
-
+## Known Issue
+```Ball gets stuck in corner```
 ## Instructions
 
 Movement:
