@@ -2,12 +2,14 @@ GEM
   remote: https://rubygems.org/
   specs:
     gosu (1.4.1)
+    highline (2.0.3)
 
 PLATFORMS
   x64-mingw32
 
 DEPENDENCIES
   gosu
+  highline
 
 BUNDLED WITH
    2.2.29
